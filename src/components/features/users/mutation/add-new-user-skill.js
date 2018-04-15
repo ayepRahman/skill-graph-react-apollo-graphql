@@ -8,12 +8,15 @@ import { Modal, ModalBackground, ModalCard, ModalCardBody, ModalCardFooter } fro
 import { Field, FieldBody, FieldLabel, Control, Label, Input } from 'bloomer';
 import { Button } from 'bloomer';
 
+import { SkillGraphWithQuery } from 'components/features/users';
+
 export class AddNewUser extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isOpen: false,
+      value: '',
     };
 
     autoBind(this);
@@ -25,13 +28,29 @@ export class AddNewUser extends Component {
     });
   }
 
-  handleSubmit(e) {
-    const { mutate } = this.props;
+  handleChange(event) {
+    this.setState({
+      value: event.target.value,
+    });
+  }
 
-    debugger;
+  handleSubmit(event) {
+    const { mutate } = this.props;
+    const { value } = this.state;
+    event.preventDefault();
+
     console.log('====================================');
-    console.log(mutate);
+    console.log('handleSubmit', value);
     console.log('====================================');
+
+    mutate({
+      variables: { name: this.state.value },
+      refetchQueries: [{ query: SkillGraphWithQuery }],
+    }).then(res => {
+      console.log('====================================');
+      console.log('mutate response', res);
+      console.log('====================================');
+    });
   }
 
   renderForm() {
@@ -40,7 +59,12 @@ export class AddNewUser extends Component {
         <Field>
           <Label>Name</Label>
           <Control>
-            <Input type="text" placeholder="Text Input" />
+            <Input
+              type="text"
+              placeholder="Username"
+              value={this.state.value}
+              onChange={this.handleChange}
+            />
           </Control>
         </Field>
       </form>
@@ -54,10 +78,10 @@ export class AddNewUser extends Component {
         <ModalCard>
           <ModalCardBody>{this.renderForm()}</ModalCardBody>
           <ModalCardFooter>
-            <Button onSubmit={this.handleSubmit} isColor="primary" isOutlined>
+            <Button onClick={this.handleSubmit} isColor="primary" isOutlined>
               Submit
             </Button>
-            <Button onClick={() => this.toggleModal()} isColor="danger" isOutlined>
+            <Button onClick={this.toggleModal} isColor="danger" isOutlined>
               Cancel
             </Button>
           </ModalCardFooter>

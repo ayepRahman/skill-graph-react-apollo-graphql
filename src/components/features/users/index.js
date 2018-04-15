@@ -63,7 +63,7 @@ const ALL_USERS_QUERY = gql`
   }
 `;
 
-const SkillGraphWithQuery = graphql(ALL_USERS_QUERY, {
+export const SkillGraphWithQuery = graphql(ALL_USERS_QUERY, {
   name: 'allUsersQuery',
   options: {
     fetchPolicy: 'network-only',
