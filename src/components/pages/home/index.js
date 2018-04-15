@@ -4,7 +4,7 @@ import { Container, Columns, Column, Section, Title, Subtitle } from 'bloomer';
 // import { Button } from 'bloomer';
 // import autoBind from 'react-autobind';
 
-import SkillGraph from 'components/features/skills';
+import SkillGraph from 'components/features/users';
 
 export class Home extends Component {
   render() {
