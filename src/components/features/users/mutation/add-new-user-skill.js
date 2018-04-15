@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {} from 'react-apollo';
+import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import autoBind from 'react-autobind';
 
@@ -8,7 +8,7 @@ import { Modal, ModalBackground, ModalCard, ModalCardBody, ModalCardFooter } fro
 import { Field, FieldBody, FieldLabel, Control, Label, Input } from 'bloomer';
 import { Button } from 'bloomer';
 
-export class AddNewUserSkills extends Component {
+export class AddNewUser extends Component {
   constructor(props) {
     super(props);
 
@@ -25,14 +25,25 @@ export class AddNewUserSkills extends Component {
     });
   }
 
+  handleSubmit(e) {
+    const { mutate } = this.props;
+
+    debugger;
+    console.log('====================================');
+    console.log(mutate);
+    console.log('====================================');
+  }
+
   renderForm() {
     return (
-      <Field>
-        <Label>Name</Label>
-        <Control>
-          <Input type="text" placeholder="Text Input" />
-        </Control>
-      </Field>
+      <form onSubmit={this.handleSubmit}>
+        <Field>
+          <Label>Name</Label>
+          <Control>
+            <Input type="text" placeholder="Text Input" />
+          </Control>
+        </Field>
+      </form>
     );
   }
 
@@ -43,7 +54,7 @@ export class AddNewUserSkills extends Component {
         <ModalCard>
           <ModalCardBody>{this.renderForm()}</ModalCardBody>
           <ModalCardFooter>
-            <Button isColor="primary" isOutlined>
+            <Button onSubmit={this.handleSubmit} isColor="primary" isOutlined>
               Submit
             </Button>
             <Button onClick={() => this.toggleModal()} isColor="danger" isOutlined>
@@ -73,4 +84,15 @@ export class AddNewUserSkills extends Component {
   }
 }
 
-export default AddNewUserSkills;
+const ADD_NEW_USER = gql`
+  mutation addNewUser($name: String!) {
+    addNewUser(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
+const AddNewUserWithMutation = graphql(ADD_NEW_USER)(AddNewUser);
+
+export default AddNewUserWithMutation;

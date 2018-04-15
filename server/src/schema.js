@@ -7,12 +7,13 @@ const typeDefs = `
     name: String
   }
 
-  type Mutation {
-    addNewUser(name: String!): User
-  }
-
   type Query {
     users: [User]
+  }
+
+  
+  type Mutation {
+    addNewUser(name: String!): User
   }
 `;
 

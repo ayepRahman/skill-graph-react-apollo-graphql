@@ -25,7 +25,7 @@ export class UsersSkillGraph extends Component {
               {users &&
                 users.map(user => {
                   return (
-                    <ul style={{ padding: '1rem' }}>
+                    <ul key={user.id} style={{ padding: '1rem' }}>
                       <li>{`User Id: ${user.id}`}</li>
                       <li>{`Name: ${user.name}`}</li>
                     </ul>
@@ -39,20 +39,4 @@ export class UsersSkillGraph extends Component {
   }
 }
 
-const ALL_USERS_QUERY = gql`
-  query AllUsersQuery {
-    users {
-      id
-      name
-    }
-  }
-`;
-
-const UsersSkillGraphWithQuery = graphql(ALL_USERS_QUERY, {
-  name: 'allUsersQuery',
-  options: {
-    fetchPolicy: 'network-only',
-  },
-})(UsersSkillGraph);
-
-export default UsersSkillGraphWithQuery;
+export default UsersSkillGraph;

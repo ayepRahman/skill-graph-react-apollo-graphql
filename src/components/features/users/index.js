@@ -20,7 +20,6 @@ export class SkillGraph extends Component {
   render() {
     const { allUsersQuery: { loading, error, users } } = this.props;
 
-    debugger;
     if (loading) {
       return (
         <div className="has-text-centered">
