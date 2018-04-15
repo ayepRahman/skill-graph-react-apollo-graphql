@@ -16,16 +16,22 @@ import App from './components/app';
 import 'bulma/css/bulma.css';
 import 'styles/index.css';
 
+// this for setting up mockup data
 const schema = makeExecutableSchema({ typeDefs });
 addMockFunctionsToSchema({ schema });
-
 const mockSchemaLink = new SchemaLink({ schema });
 
-const apolloCache = new InMemoryCache(window.__APOLLO_STATE__);
+// this is for connecting to localhost server
+const httpLink = new HttpLink({
+  uri: `http://localhost:8000/graphql`,
+  fetchOptions: { method: 'GET' },
+});
+
+const apolloCache = new InMemoryCache.restore(window.__APOLLO_STATE__);
 
 const client = new ApolloClient({
+  link: httpLink,
   cache: apolloCache,
-  link: mockSchemaLink,
 });
 
 // const grapQlApi = process.env.REACT_APP_GRAPHQL_ENDPOINT;
