@@ -1,29 +1,29 @@
 const users = [
   {
     id: 1,
-    name: 'Arif',
+    name: "Arif"
   },
   {
     id: 2,
-    name: 'Amy',
+    name: "Amy"
   },
   {
     id: 3,
-    name: 'Arysha',
+    name: "Arysha"
   },
   {
     id: 4,
-    name: 'Aqil',
-  },
+    name: "Aqil"
+  }
 ];
 
-let nextId = 10;
+let nextId = 5;
 
 export const resolvers = {
   Query: {
     users: () => {
       return users;
-    },
+    }
   },
 
   Mutation: {
@@ -32,6 +32,6 @@ export const resolvers = {
       users.push(newUser);
 
       return newUser;
-    },
-  },
+    }
+  }
 };

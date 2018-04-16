@@ -1,14 +1,20 @@
-import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-import autoBind from 'react-autobind';
+import React, { Component } from "react";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
+import autoBind from "react-autobind";
 
-import { Container, Columns, Column, Section } from 'bloomer';
-import { Modal, ModalBackground, ModalCard, ModalCardBody, ModalCardFooter } from 'bloomer';
-import { Button } from 'bloomer';
+import { Container, Columns, Column, Section } from "bloomer";
+import {
+  Modal,
+  ModalBackground,
+  ModalCard,
+  ModalCardBody,
+  ModalCardFooter
+} from "bloomer";
+import { Button } from "bloomer";
 
-import UsersSkillGraph from './query/user-skill-graph';
-import AddNewUserSkills from './mutation/add-new-user-skill';
+import UsersSkillGraph from "./query/user-skill-graph";
+import AddNewUserSkills from "./mutation/add-new-user-skill";
 
 export class SkillGraph extends Component {
   constructor(props) {
@@ -18,7 +24,9 @@ export class SkillGraph extends Component {
   }
 
   render() {
-    const { allUsersQuery: { loading, error, users } } = this.props;
+    const {
+      allUsersQuery: { loading, error, users }
+    } = this.props;
 
     if (loading) {
       return (
@@ -64,10 +72,11 @@ const ALL_USERS_QUERY = gql`
 `;
 
 export const SkillGraphWithQuery = graphql(ALL_USERS_QUERY, {
-  name: 'allUsersQuery',
+  name: "allUsersQuery",
   options: {
-    fetchPolicy: 'network-only',
-  },
+    fetchPolicy: "network-only",
+    options: { pollInterval: 5000 }
+  }
 })(SkillGraph);
 
 export default SkillGraphWithQuery;

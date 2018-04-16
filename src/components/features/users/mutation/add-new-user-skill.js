@@ -1,14 +1,28 @@
-import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-import autoBind from 'react-autobind';
+import React, { Component } from "react";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
+import autoBind from "react-autobind";
 
-import { Container, Columns, Column, Section } from 'bloomer';
-import { Modal, ModalBackground, ModalCard, ModalCardBody, ModalCardFooter } from 'bloomer';
-import { Field, FieldBody, FieldLabel, Control, Label, Input } from 'bloomer';
-import { Button } from 'bloomer';
+import { Container, Columns, Column, Section } from "bloomer";
+import {
+  Modal,
+  ModalBackground,
+  ModalCard,
+  ModalCardBody,
+  ModalCardFooter
+} from "bloomer";
+import {
+  Field,
+  FieldBody,
+  FieldLabel,
+  Control,
+  Label,
+  Input,
+  Select
+} from "bloomer";
+import { Button } from "bloomer";
 
-import { SkillGraphWithQuery } from 'components/features/users';
+import { SkillGraphWithQuery } from "components/features/users";
 
 export class AddNewUser extends Component {
   constructor(props) {
@@ -16,7 +30,9 @@ export class AddNewUser extends Component {
 
     this.state = {
       isOpen: false,
-      value: '',
+      name: "",
+      skill: "",
+      skill_level: ""
     };
 
     autoBind(this);
@@ -24,49 +40,62 @@ export class AddNewUser extends Component {
 
   toggleModal() {
     this.setState({
-      isOpen: !this.state.isOpen,
+      isOpen: !this.state.isOpen
     });
   }
 
   handleChange(event) {
     this.setState({
-      value: event.target.value,
+      [event.target.name]: event.target.value
     });
   }
 
-  handleSubmit(event) {
-    const { mutate } = this.props;
-    const { value } = this.state;
-    event.preventDefault();
+  handleSubmit = async () => {
+    const { addNewUserMutation } = this.props;
+    const { name, skill } = this.state;
 
-    console.log('====================================');
-    console.log('handleSubmit', value);
-    console.log('====================================');
-
-    mutate({
-      variables: { name: this.state.value },
-      refetchQueries: [{ query: SkillGraphWithQuery }],
-    }).then(res => {
-      console.log('====================================');
-      console.log('mutate response', res);
-      console.log('====================================');
+    await addNewUserMutation({
+      variables: { name },
+      refetchQueries: [{ query: SkillGraphWithQuery }]
     });
-  }
+
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  };
 
   renderForm() {
     return (
       <form onSubmit={this.handleSubmit}>
         <Field>
-          <Label>Name</Label>
+          <Label isPulled="left">Name</Label>
           <Control>
             <Input
+              name="name"
               type="text"
               placeholder="Username"
-              value={this.state.value}
+              value={this.state.name}
               onChange={this.handleChange}
+              required
             />
           </Control>
         </Field>
+
+        {
+          //   <Field>
+          //   <Label isPulled="left">Skill</Label>
+          //   <Control>
+          //     <Input
+          //       name="skill"
+          //       type="text"
+          //       placeholder="Skill"
+          //       value={this.state.skill}
+          //       onChange={this.handleChange}
+          //       required
+          //     />
+          //   </Control>
+          // </Field>
+        }
       </form>
     );
   }
@@ -117,6 +146,8 @@ const ADD_NEW_USER = gql`
   }
 `;
 
-const AddNewUserWithMutation = graphql(ADD_NEW_USER)(AddNewUser);
+const AddNewUserWithMutation = graphql(ADD_NEW_USER, {
+  name: "addNewUserMutation"
+})(AddNewUser);
 
 export default AddNewUserWithMutation;

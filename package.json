@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.4",
     "react-scripts": "^1.1.4"
   },
   "dependencies": {
@@ -16,12 +18,15 @@
     "bloomer": "^0.6.3",
     "bulma": "^0.6.2",
     "chart.js": "^2.7.2",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
     "graphql": "^0.11.7",
     "graphql-subscriptions": "^0.5.8",
     "graphql-tag": "^2.5.0",
     "graphql-tools": "^2.24.0",
     "node-sass-chokidar": "^1.2.2",
     "npm-run-all": "^4.1.2",
+    "prettier": "^1.12.0",
     "react": "^16.0.0",
     "react-apollo": "^2.0.0",
     "react-autobind": "^1.0.6",
@@ -31,13 +36,19 @@
     "styled-components": "^3.2.5"
   },
   "scripts": {
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "build-css":
+      "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "watch-css":
+      "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js ",
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,css,scss}": ["prettier --write", "git add"]
   }
 }
