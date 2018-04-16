@@ -1,11 +1,18 @@
-import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-import autoBind from 'react-autobind';
+import React, { Component } from "react";
+import autoBind from "react-autobind";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
-import { Container, Columns, Column, Section } from 'bloomer';
-import { Modal, ModalBackground, ModalCard, ModalCardBody, ModalCardFooter } from 'bloomer';
-import { Button } from 'bloomer';
+import { Container, Columns, Column, Section, Box } from "bloomer";
+
+const ALL_USERS_QUERY = gql`
+  query AllUsersQuery {
+    users {
+      id
+      name
+    }
+  }
+`;
 
 export class UsersSkillGraph extends Component {
   constructor(props) {
@@ -14,25 +21,39 @@ export class UsersSkillGraph extends Component {
     autoBind(this);
   }
 
-  render() {
-    const { users } = this.props;
+  renderUserQuery() {
+    return (
+      <Query query={ALL_USERS_QUERY}>
+        {({ loading, error, data }) => {
+          const { users } = data;
+          debugger;
+          if (loading) return <h1>LOADING!!!!!</h1>;
+          if (error) return `Error!: ${error}`;
 
+          return (
+            <Column hasTextAlign="centered">
+              {users.map(user => {
+                return (
+                  <Box>
+                    <ul>
+                      <li>{user.id}</li>
+                      <li>{user.name}</li>
+                    </ul>
+                  </Box>
+                );
+              })}
+            </Column>
+          );
+        }}
+      </Query>
+    );
+  }
+
+  render() {
     return (
       <Section>
         <Container>
-          <Columns isCentered>
-            <Column hasTextAlign="centered">
-              {users &&
-                users.map(user => {
-                  return (
-                    <ul key={user.id} style={{ padding: '1rem' }}>
-                      <li>{`User Id: ${user.id}`}</li>
-                      <li>{`Name: ${user.name}`}</li>
-                    </ul>
-                  );
-                })}
-            </Column>
-          </Columns>
+          <Columns>{this.renderUserQuery()}</Columns>
         </Container>
       </Section>
     );

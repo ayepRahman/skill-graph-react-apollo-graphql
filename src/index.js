@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import ApolloClient, { ApolloProvider, HttpLink, InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from "react-apollo";
-import { ApolloClient } from "apollo-client";
-import { HttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
+// import { ApolloClient } from "apollo-boost";
+// import { ApolloClient } from "apollo-client";
+// import { HttpLink } from "apollo-link-http";
+// import { InMemoryCache } from "apollo-cache-inmemory";
 
 /*
   # Adding MockUp Network Interface for testing
@@ -12,9 +13,9 @@ import { InMemoryCache } from "apollo-cache-inmemory";
   # apollo-test-utils depreciated since apollo client 2.0 using apollo-link-schema instead
 */
 
-import { makeExecutableSchema, addMockFunctionsToSchema } from "graphql-tools";
-import { SchemaLink } from "apollo-link-schema";
-import { typeDefs } from "schema/schema";
+// import { makeExecutableSchema, addMockFunctionsToSchema } from "graphql-tools";
+// import { SchemaLink } from "apollo-link-schema";
+// import { typeDefs } from "schema/schema";
 
 import App from "./components/app";
 

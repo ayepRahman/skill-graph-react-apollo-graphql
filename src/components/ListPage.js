@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Post from './Post';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import React from "react";
+import { Link } from "react-router-dom";
+import Post from "./Post";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
 
 class ListPage extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -20,13 +20,13 @@ class ListPage extends React.Component {
       );
     }
 
-    let blurClass = '';
-    if (this.props.location.pathname !== '/') {
-      blurClass = ' blur';
+    let blurClass = "";
+    if (this.props.location.pathname !== "/") {
+      blurClass = " blur";
     }
 
     return (
-      <div className={'w-100 flex justify-center pa6' + blurClass}>
+      <div className={"w-100 flex justify-center pa6" + blurClass}>
         <div className="w-100 flex flex-wrap" style={{ maxWidth: 1150 }}>
           <Link
             to="/create"
@@ -39,7 +39,11 @@ class ListPage extends React.Component {
           </Link>
           {this.props.allPostsQuery.allPosts &&
             this.props.allPostsQuery.allPosts.map(post => (
-              <Post key={post.id} post={post} refresh={() => this.props.allPostsQuery.refetch()} />
+              <Post
+                key={post.id}
+                post={post}
+                refresh={() => this.props.allPostsQuery.refetch()}
+              />
             ))}
         </div>
         {this.props.children}
@@ -59,10 +63,10 @@ const ALL_POSTS_QUERY = gql`
 `;
 
 const ListPageWithQuery = graphql(ALL_POSTS_QUERY, {
-  name: 'allPostsQuery',
+  name: "allPostsQuery",
   options: {
-    fetchPolicy: 'network-only',
-  },
+    fetchPolicy: "network-only"
+  }
 })(ListPage);
 
 export default ListPageWithQuery;

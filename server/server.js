@@ -1,30 +1,30 @@
-import express from 'express';
-import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
+import express from "express";
+import { graphqlExpress, graphiqlExpress } from "graphql-server-express";
+import bodyParser from "body-parser";
+import cors from "cors";
 
-import { schema } from './src/schema';
+import { schema } from "./src/schema";
 
 const PORT = 8000;
 const server = express();
 
 // connecting server to client
-server.use('*', cors({ origin: 'https://localhost:9000' }));
-
+// server.use("*", cors({ origin: "https://localhost:9000" }));
+server.use(cors());
 
 server.use(
-  '/graphql',
+  "/graphql",
   bodyParser.json(),
   graphqlExpress({
-    schema,
+    schema
   })
 );
 
 // using the endpoint from /graphql to connect to /graphiql
 server.use(
-  '/graphiql',
+  "/graphiql",
   graphiqlExpress({
-    endpointURL: '/graphql',
+    endpointURL: "/graphql"
   })
 );
 

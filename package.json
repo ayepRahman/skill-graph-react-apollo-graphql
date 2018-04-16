@@ -9,37 +9,35 @@
   },
   "dependencies": {
     "apollo-boost": "^0.1.4",
-    "apollo-cache-inmemory": "^1.0.0",
-    "apollo-client": "^2.0.1",
-    "apollo-link": "^1.0.0",
-    "apollo-link-http": "^1.1.0",
-    "apollo-link-schema": "^1.0.6",
+    "apollo-cache-inmemory": "^1.1.12",
+    "apollo-client": "^2.2.8",
+    "apollo-link": "^1.2.2",
+    "apollo-link-http": "^1.5.4",
+    "apollo-link-schema": "^1.1.0",
     "apollo-test-utils": "^0.3.2",
     "bloomer": "^0.6.3",
-    "bulma": "^0.6.2",
+    "bulma": "^0.7.0",
     "chart.js": "^2.7.2",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.0",
-    "graphql": "^0.11.7",
+    "graphql": "^0.13.2",
     "graphql-subscriptions": "^0.5.8",
-    "graphql-tag": "^2.5.0",
+    "graphql-tag": "^2.8.0",
     "graphql-tools": "^2.24.0",
     "node-sass-chokidar": "^1.2.2",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.12.0",
-    "react": "^16.0.0",
-    "react-apollo": "^2.0.0",
+    "react": "^16.3.1",
+    "react-apollo": "2.1.0-beta.3",
     "react-autobind": "^1.0.6",
-    "react-dom": "^16.0.0",
-    "react-modal": "^3.1.0",
+    "react-dom": "^16.3.1",
+    "react-modal": "^3.3.2",
     "react-router-dom": "^4.2.2",
     "styled-components": "^3.2.5"
   },
   "scripts": {
-    "build-css":
-      "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css":
-      "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js ",
     "build-js": "react-scripts build",
@@ -49,6 +47,9 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css,scss}": ["prettier --write", "git add"]
+    "src/**/*.{js,jsx,json,css,scss}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

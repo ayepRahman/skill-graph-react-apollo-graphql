@@ -1,153 +1,147 @@
-import React, { Component } from "react";
-import { graphql } from "react-apollo";
-import gql from "graphql-tag";
-import autoBind from "react-autobind";
+// import React, { Component } from "react";
+// import { graphql, Mutation } from "react-apollo";
+// import gql from "graphql-tag";
+// import autoBind from "react-autobind";
 
-import { Container, Columns, Column, Section } from "bloomer";
-import {
-  Modal,
-  ModalBackground,
-  ModalCard,
-  ModalCardBody,
-  ModalCardFooter
-} from "bloomer";
-import {
-  Field,
-  FieldBody,
-  FieldLabel,
-  Control,
-  Label,
-  Input,
-  Select
-} from "bloomer";
-import { Button } from "bloomer";
+// import { Container, Columns, Column, Section } from "bloomer";
+// import {
+//   Modal,
+//   ModalBackground,
+//   ModalCard,
+//   ModalCardBody,
+//   ModalCardFooter
+// } from "bloomer";
+// import { Field, Control, Label, Input } from "bloomer";
+// import { Button } from "bloomer";
 
-import { SkillGraphWithQuery } from "components/features/users";
+// import { SkillGraphWithQuery } from "components/features/users";
 
-export class AddNewUser extends Component {
-  constructor(props) {
-    super(props);
+// export class AddNewUser extends Component {
+//   constructor(props) {
+//     super(props);
 
-    this.state = {
-      isOpen: false,
-      name: "",
-      skill: "",
-      skill_level: ""
-    };
+//     this.state = {
+//       isOpen: false,
+//       name: "",
+//       skill: "",
+//       skill_level: ""
+//     };
 
-    autoBind(this);
-  }
+//     autoBind(this);
+//   }
 
-  toggleModal() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
+//   toggleModal() {
+//     this.setState({
+//       isOpen: !this.state.isOpen
+//     });
+//   }
 
-  handleChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
+//   handleChange(event) {
+//     this.setState({
+//       [event.target.name]: event.target.value
+//     });
+//   }
 
-  handleSubmit = async () => {
-    const { addNewUserMutation } = this.props;
-    const { name, skill } = this.state;
+//   handleSubmit = async () => {
+//     const { addNewUserMutation } = this.props;
+//     const { name } = this.state;
 
-    await addNewUserMutation({
-      variables: { name },
-      refetchQueries: [{ query: SkillGraphWithQuery }]
-    });
+//     alert("trigerred");
 
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  };
+//     await addNewUserMutation({
+//       variables: { name },
+//       refetchQueries: [{ query: SkillGraphWithQuery }]
+//     });
 
-  renderForm() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <Field>
-          <Label isPulled="left">Name</Label>
-          <Control>
-            <Input
-              name="name"
-              type="text"
-              placeholder="Username"
-              value={this.state.name}
-              onChange={this.handleChange}
-              required
-            />
-          </Control>
-        </Field>
+//     this.setState({
+//       isOpen: !this.state.isOpen
+//     });
+//   };
 
-        {
-          //   <Field>
-          //   <Label isPulled="left">Skill</Label>
-          //   <Control>
-          //     <Input
-          //       name="skill"
-          //       type="text"
-          //       placeholder="Skill"
-          //       value={this.state.skill}
-          //       onChange={this.handleChange}
-          //       required
-          //     />
-          //   </Control>
-          // </Field>
-        }
-      </form>
-    );
-  }
+//   renderForm() {
+//     return (
+//       <form onSubmit={this.handleSubmit}>
+//         <Field>
+//           <Label isPulled="left">Name</Label>
+//           <Control>
+//             <Input
+//               name="name"
+//               type="text"
+//               placeholder="Username"
+//               value={this.state.name}
+//               onChange={this.handleChange}
+//               required
+//             />
+//           </Control>
+//         </Field>
 
-  renderModal() {
-    return (
-      <Modal isActive={this.state.isOpen}>
-        <ModalBackground />
-        <ModalCard>
-          <ModalCardBody>{this.renderForm()}</ModalCardBody>
-          <ModalCardFooter>
-            <Button onClick={this.handleSubmit} isColor="primary" isOutlined>
-              Submit
-            </Button>
-            <Button onClick={this.toggleModal} isColor="danger" isOutlined>
-              Cancel
-            </Button>
-          </ModalCardFooter>
-        </ModalCard>
-      </Modal>
-    );
-  }
+//         {
+//           //   <Field>
+//           //   <Label isPulled="left">Skill</Label>
+//           //   <Control>
+//           //     <Input
+//           //       name="skill"
+//           //       type="text"
+//           //       placeholder="Skill"
+//           //       value={this.state.skill}
+//           //       onChange={this.handleChange}
+//           //       required
+//           //     />
+//           //   </Control>
+//           // </Field>
+//         }
+//       </form>
+//     );
+//   }
 
-  render() {
-    return (
-      <Section>
-        <Container>
-          <Columns isCentered>
-            <Column hasTextAlign="centered">
-              <Button onClick={() => this.toggleModal()} isColor="primary">
-                Add Skill
-              </Button>
-              {this.renderModal()}
-            </Column>
-          </Columns>
-        </Container>
-      </Section>
-    );
-  }
-}
+//   renderModal() {
+//     return (
+//       <Modal isActive={this.state.isOpen}>
+//         <ModalBackground />
+//         <ModalCard>
+//           <ModalCardBody>{this.renderForm()}</ModalCardBody>
+//           <ModalCardFooter>
+//             <Button onClick={this.handleSubmit} isColor="primary" isOutlined>
+//               Save
+//             </Button>
+//             <Button onClick={this.toggleModal} isColor="danger" isOutlined>
+//               Cancel
+//             </Button>
+//           </ModalCardFooter>
+//         </ModalCard>
+//       </Modal>
+//     );
+//   }
 
-const ADD_NEW_USER = gql`
-  mutation addNewUser($name: String!) {
-    addNewUser(name: $name) {
-      id
-      name
-    }
-  }
-`;
+//   render() {
+//     return (
+//       <Section>
+//         <Container>
+//           <Columns isCentered>
+//             <Column hasTextAlign="centered">
+//               <Button onClick={() => this.toggleModal()} isColor="primary">
+//                 Add Skill
+//               </Button>
+//               {this.renderModal()}
+//             </Column>
+//           </Columns>
+//         </Container>
+//       </Section>
+//     );
+//   }
+// }
 
-const AddNewUserWithMutation = graphql(ADD_NEW_USER, {
-  name: "addNewUserMutation"
-})(AddNewUser);
+// const ADD_NEW_USER = gql`
+//   mutation addNewUser($name: String!) {
+//     addNewUser(name: $name) {
+//       id
+//       name
+//     }
+//   }
+// `;
 
-export default AddNewUserWithMutation;
+// const AddNewUserWithMutation = graphql(ADD_NEW_USER, {
+//   name: "addNewUserMutation"
+// })(AddNewUser);
+
+// export default AddNewUserWithMutation;
