@@ -26,7 +26,7 @@ export class UsersSkillGraph extends Component {
       <Query query={ALL_USERS_QUERY}>
         {({ loading, error, data }) => {
           const { users } = data;
-          debugger;
+
           if (loading) return <h1>LOADING!!!!!</h1>;
           if (error) return `Error!: ${error}`;
 
@@ -34,7 +34,7 @@ export class UsersSkillGraph extends Component {
             <Column hasTextAlign="centered">
               {users.map(user => {
                 return (
-                  <Box>
+                  <Box key={user.id}>
                     <ul>
                       <li>{user.id}</li>
                       <li>{user.name}</li>

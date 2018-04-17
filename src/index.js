@@ -2,10 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { ApolloProvider } from "react-apollo";
 import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
-// import { ApolloClient } from "apollo-boost";
-// import { ApolloClient } from "apollo-client";
-// import { HttpLink } from "apollo-link-http";
-// import { InMemoryCache } from "apollo-cache-inmemory";
 
 /*
   # Adding MockUp Network Interface for testing

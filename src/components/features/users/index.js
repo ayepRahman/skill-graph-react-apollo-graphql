@@ -6,7 +6,7 @@ import React, { Component } from "react";
 import { Container, Columns, Column, Section } from "bloomer";
 
 import UsersSkillGraph from "./query/user-skill-graph";
-// import AddNewUserSkills from "./mutation/add-new-user-skill";
+import AddNewUser from "./mutation/add-new-user-skill";
 
 export class SkillGraph extends Component {
   render() {
@@ -15,9 +15,7 @@ export class SkillGraph extends Component {
         <Container>
           <Columns isCentered>
             <Column hasTextAlign="centered">
-              {
-                // <AddNewUserSkills />
-              }
+              <AddNewUser />
             </Column>
           </Columns>
         </Container>

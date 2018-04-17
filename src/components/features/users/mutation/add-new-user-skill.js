@@ -1,147 +1,144 @@
-// import React, { Component } from "react";
-// import { graphql, Mutation } from "react-apollo";
-// import gql from "graphql-tag";
-// import autoBind from "react-autobind";
+import React, { Component } from "react";
+import { Mutation } from "react-apollo";
+import gql from "graphql-tag";
+import autoBind from "react-autobind";
 
-// import { Container, Columns, Column, Section } from "bloomer";
-// import {
-//   Modal,
-//   ModalBackground,
-//   ModalCard,
-//   ModalCardBody,
-//   ModalCardFooter
-// } from "bloomer";
-// import { Field, Control, Label, Input } from "bloomer";
-// import { Button } from "bloomer";
+import { Container, Columns, Column, Section } from "bloomer";
+import {
+  Modal,
+  ModalBackground,
+  ModalCard,
+  ModalCardHeader,
+  ModalCardTitle,
+  ModalCardBody,
+  ModalCardFooter,
+  Delete
+} from "bloomer";
+import { Field, Control, Label, Input } from "bloomer";
+import { Button } from "bloomer";
 
-// import { SkillGraphWithQuery } from "components/features/users";
+const ADD_NEW_USER = gql`
+  mutation addNewUser($name: String!) {
+    addNewUser(name: $name) {
+      id
+      name
+    }
+  }
+`;
 
-// export class AddNewUser extends Component {
-//   constructor(props) {
-//     super(props);
+export class AddNewUser extends Component {
+  constructor(props) {
+    super(props);
 
-//     this.state = {
-//       isOpen: false,
-//       name: "",
-//       skill: "",
-//       skill_level: ""
-//     };
+    this.state = {
+      isOpen: false,
+      name: "",
+      skill: "",
+      skill_level: ""
+    };
 
-//     autoBind(this);
-//   }
+    autoBind(this);
+  }
 
-//   toggleModal() {
-//     this.setState({
-//       isOpen: !this.state.isOpen
-//     });
-//   }
+  toggleModal() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
 
-//   handleChange(event) {
-//     this.setState({
-//       [event.target.name]: event.target.value
-//     });
-//   }
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
 
-//   handleSubmit = async () => {
-//     const { addNewUserMutation } = this.props;
-//     const { name } = this.state;
+  handleSubmit(event, addNewUser) {
+    const { name } = this.state;
+    event.preventDefault();
 
-//     alert("trigerred");
+    addNewUser({
+      variables: { name }
+    });
 
-//     await addNewUserMutation({
-//       variables: { name },
-//       refetchQueries: [{ query: SkillGraphWithQuery }]
-//     });
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
 
-//     this.setState({
-//       isOpen: !this.state.isOpen
-//     });
-//   };
+  renderForm() {
+    return (
+      <Mutation mutation={ADD_NEW_USER}>
+        {addNewUser => (
+          <div>
+            <form onSubmit={event => this.handleSubmit(event, addNewUser)}>
+              <Field>
+                <Label isPulled="left">Name</Label>
+                <Control>
+                  <Input
+                    name="name"
+                    type="text"
+                    placeholder="Username"
+                    value={this.state.name}
+                    onChange={this.handleChange}
+                    required
+                  />
+                </Control>
+              </Field>
+            </form>
+          </div>
+        )}
+      </Mutation>
+    );
+  }
 
-//   renderForm() {
-//     return (
-//       <form onSubmit={this.handleSubmit}>
-//         <Field>
-//           <Label isPulled="left">Name</Label>
-//           <Control>
-//             <Input
-//               name="name"
-//               type="text"
-//               placeholder="Username"
-//               value={this.state.name}
-//               onChange={this.handleChange}
-//               required
-//             />
-//           </Control>
-//         </Field>
+  renderModal() {
+    return (
+      <Modal isActive={this.state.isOpen}>
+        <ModalBackground />
 
-//         {
-//           //   <Field>
-//           //   <Label isPulled="left">Skill</Label>
-//           //   <Control>
-//           //     <Input
-//           //       name="skill"
-//           //       type="text"
-//           //       placeholder="Skill"
-//           //       value={this.state.skill}
-//           //       onChange={this.handleChange}
-//           //       required
-//           //     />
-//           //   </Control>
-//           // </Field>
-//         }
-//       </form>
-//     );
-//   }
+        <Mutation mutation={ADD_NEW_USER}>
+          {addNewUser => (
+            <ModalCard>
+              <ModalCardHeader>
+                <ModalCardTitle>Add User Skill</ModalCardTitle>
+                <Delete onClick={this.toggleModal} />
+              </ModalCardHeader>
+              <ModalCardBody>{this.renderForm()}</ModalCardBody>
+              <ModalCardFooter>
+                <Button
+                  onClick={event => this.handleSubmit(event, addNewUser)}
+                  isColor="primary"
+                  isOutlined
+                >
+                  Save
+                </Button>
+                <Button onClick={this.toggleModal} isColor="danger" isOutlined>
+                  Cancel
+                </Button>
+              </ModalCardFooter>
+            </ModalCard>
+          )}
+        </Mutation>
+      </Modal>
+    );
+  }
 
-//   renderModal() {
-//     return (
-//       <Modal isActive={this.state.isOpen}>
-//         <ModalBackground />
-//         <ModalCard>
-//           <ModalCardBody>{this.renderForm()}</ModalCardBody>
-//           <ModalCardFooter>
-//             <Button onClick={this.handleSubmit} isColor="primary" isOutlined>
-//               Save
-//             </Button>
-//             <Button onClick={this.toggleModal} isColor="danger" isOutlined>
-//               Cancel
-//             </Button>
-//           </ModalCardFooter>
-//         </ModalCard>
-//       </Modal>
-//     );
-//   }
+  render() {
+    return (
+      <Section>
+        <Container>
+          <Columns isCentered>
+            <Column hasTextAlign="centered">
+              <Button onClick={() => this.toggleModal()} isColor="primary">
+                Add Skill
+              </Button>
+              {this.renderModal()}
+            </Column>
+          </Columns>
+        </Container>
+      </Section>
+    );
+  }
+}
 
-//   render() {
-//     return (
-//       <Section>
-//         <Container>
-//           <Columns isCentered>
-//             <Column hasTextAlign="centered">
-//               <Button onClick={() => this.toggleModal()} isColor="primary">
-//                 Add Skill
-//               </Button>
-//               {this.renderModal()}
-//             </Column>
-//           </Columns>
-//         </Container>
-//       </Section>
-//     );
-//   }
-// }
-
-// const ADD_NEW_USER = gql`
-//   mutation addNewUser($name: String!) {
-//     addNewUser(name: $name) {
-//       id
-//       name
-//     }
-//   }
-// `;
-
-// const AddNewUserWithMutation = graphql(ADD_NEW_USER, {
-//   name: "addNewUserMutation"
-// })(AddNewUser);
-
-// export default AddNewUserWithMutation;
+export default AddNewUser;
