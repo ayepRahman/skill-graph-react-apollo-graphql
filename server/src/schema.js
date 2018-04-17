@@ -1,5 +1,13 @@
-import { makeExecutableSchema } from "graphql-tools";
+import { makeExecutableSchema, mergeSchemas } from "graphql-tools";
+import { combineResolvers } from "graphql-resolvers";
 import { resolvers } from "./resolvers";
+
+// example for merging schemas
+// export const schema = mergeSchemas({
+//   schemas: [chirpSchema, authorSchema],
+// });
+
+// exmaple for merging resolvers
 
 const typeDefs = `
   type User {
@@ -14,6 +22,10 @@ const typeDefs = `
   
   type Mutation {
     addNewUser(name: String!): User
+  }
+
+  type Subscription {
+    userAdded(userId: ID!): User
   }
 `;
 

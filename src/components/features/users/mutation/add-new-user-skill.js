@@ -17,14 +17,7 @@ import {
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
-const ADD_NEW_USER = gql`
-  mutation addNewUser($name: String!) {
-    addNewUser(name: $name) {
-      id
-      name
-    }
-  }
-`;
+import { ALL_USERS_QUERY } from "components/features/users/query/user-skill-graph";
 
 export class AddNewUser extends Component {
   constructor(props) {
@@ -52,18 +45,18 @@ export class AddNewUser extends Component {
     });
   }
 
-  handleSubmit(event, addNewUser) {
+  handleSubmit = async (event, addNewUser) => {
     const { name } = this.state;
     event.preventDefault();
 
-    addNewUser({
+    await addNewUser({
       variables: { name }
     });
 
     this.setState({
       isOpen: !this.state.isOpen
     });
-  }
+  };
 
   renderForm() {
     return (
@@ -96,7 +89,21 @@ export class AddNewUser extends Component {
       <Modal isActive={this.state.isOpen}>
         <ModalBackground />
 
-        <Mutation mutation={ADD_NEW_USER}>
+        <Mutation
+          mutation={ADD_NEW_USER}
+          update={(cache, { data: { addNewUser } }) => {
+            const { users } = cache.readQuery({
+              query: ALL_USERS_QUERY
+            });
+
+            debugger;
+
+            cache.writeQuery({
+              query: ALL_USERS_QUERY,
+              data: { users: users.concat([addNewUser]) }
+            });
+          }}
+        >
           {addNewUser => (
             <ModalCard>
               <ModalCardHeader>
@@ -140,5 +147,14 @@ export class AddNewUser extends Component {
     );
   }
 }
+
+export const ADD_NEW_USER = gql`
+  mutation addNewUser($name: String!) {
+    addNewUser(name: $name) {
+      id
+      name
+    }
+  }
+`;
 
 export default AddNewUser;

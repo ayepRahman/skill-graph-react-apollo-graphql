@@ -5,15 +5,6 @@ import gql from "graphql-tag";
 
 import { Container, Columns, Column, Section, Box } from "bloomer";
 
-const ALL_USERS_QUERY = gql`
-  query AllUsersQuery {
-    users {
-      id
-      name
-    }
-  }
-`;
-
 export class UsersSkillGraph extends Component {
   constructor(props) {
     super(props);
@@ -59,5 +50,14 @@ export class UsersSkillGraph extends Component {
     );
   }
 }
+
+export const ALL_USERS_QUERY = gql`
+  query allUsersQuery {
+    users {
+      id
+      name
+    }
+  }
+`;
 
 export default UsersSkillGraph;

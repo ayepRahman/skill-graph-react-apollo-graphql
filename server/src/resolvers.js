@@ -1,3 +1,7 @@
+import { PubSub, withFilter } from "graphql-subscriptions";
+
+const pubsub = new PubSub();
+
 const users = [
   {
     id: 1,
@@ -33,5 +37,13 @@ export const resolvers = {
 
       return newUser;
     }
+  },
+
+  addUser: (root, { message }) => {
+    const user = users.find(user => user.id === message.userId);
+
+    if (!user) throw new Error("User does not exist");
+
+    const newUser = { id: String() };
   }
 };
