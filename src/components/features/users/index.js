@@ -5,8 +5,8 @@ import React, { Component } from "react";
 
 import { Container, Columns, Column, Section } from "bloomer";
 
-import UsersSkillGraph from "./query/user-skill-graph";
-import AddNewUser from "./mutation/add-new-user-skill";
+import UsersSkillGraph from "./queries/user-skill-graph";
+import AddNewUser from "./mutations/add-user-skill";
 
 export class SkillGraph extends Component {
   render() {

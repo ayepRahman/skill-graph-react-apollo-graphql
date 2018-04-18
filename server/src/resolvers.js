@@ -6,18 +6,6 @@ const users = [
   {
     id: 1,
     name: "Arif"
-  },
-  {
-    id: 2,
-    name: "Amy"
-  },
-  {
-    id: 3,
-    name: "Arysha"
-  },
-  {
-    id: 4,
-    name: "Aqil"
   }
 ];
 
@@ -31,19 +19,19 @@ export const resolvers = {
   },
 
   Mutation: {
-    addNewUser: (root, args) => {
+    addUser: (root, args) => {
       const newUser = { id: nextId++, name: args.name };
       users.push(newUser);
 
       return newUser;
     }
-  },
-
-  addUser: (root, { message }) => {
-    const user = users.find(user => user.id === message.userId);
-
-    if (!user) throw new Error("User does not exist");
-
-    const newUser = { id: String() };
   }
+
+  // addUser: (root, { message }) => {
+  //   const user = users.find(user => user.id === message.userId);
+
+  //   if (!user) throw new Error("User does not exist");
+
+  //   const newUser = { id: String() };
+  // }
 };

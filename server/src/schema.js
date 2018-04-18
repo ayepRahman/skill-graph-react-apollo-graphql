@@ -21,7 +21,7 @@ const typeDefs = `
 
   
   type Mutation {
-    addNewUser(name: String!): User
+    addUser(name: String!): User
   }
 
   type Subscription {

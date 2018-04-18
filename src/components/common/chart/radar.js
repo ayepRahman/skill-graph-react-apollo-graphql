@@ -1,23 +1,24 @@
-import React, { Component } from 'react'
-import Chart from 'chart.js'
+import React from "react";
+import { Radar } from "react-chartjs-2";
 
-// const myRadarChart = new Chart(ctx, {
-//   type: 'radar',
-//   data: data,
-//   options: options
-// })
+const RadarChart = ({ ...props }) => {
+  const data = {
+    labels: [], // passing array of strings,
+    datasets: [
+      {
+        label: "", //name of the user /skill maybe,
+        backgroundColor: "rgba(179,181,198,0.2)",
+        borderColor: "rgba(179,181,198,1)",
+        pointBackgroundColor: "rgba(179,181,198,1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(179,181,198,1)",
+        data: [] // array of skill level
+      }
+    ]
+  };
 
-export class RadarChart extends Component {
+  return <Radar data={data} />;
+};
 
-
-  render() {
-
-    return (
-      <div>
-        
-      </div>
-    )
-  }
-}
-
-export default RadarChart
+export default RadarChart;
