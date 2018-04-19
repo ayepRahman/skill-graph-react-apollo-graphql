@@ -2,28 +2,43 @@ import { PubSub, withFilter } from "graphql-subscriptions";
 
 const pubsub = new PubSub();
 
-const users = [
-  {
-    id: 1,
-    name: "Arif"
-  }
-];
-
-let nextId = 5;
-
 export const resolvers = {
   Query: {
-    users: () => {
-      return users;
+    users: async (root, args, { User }) => {
+      const users = await User.find();
+
+      return users.map(user => {
+        user._id = user._id.toString();
+
+        return user;
+      });
+    },
+    userById: async (root, args, { User }) => {
+      const user = await User.findById(args.id);
+
+      return user;
     }
   },
 
   Mutation: {
-    addUser: (root, args) => {
-      const newUser = { id: nextId++, name: args.name };
-      users.push(newUser);
+    addUser: async (root, args, { User }) => {
+      const user = await new User(args).save();
+      user._id = user._id.toString();
 
-      return newUser;
+      return user;
+    },
+
+    updateUser: async (root, { id, name }, { User }) => {
+      const user = await User.findById(id);
+
+      user.set({ name: name });
+      user.save();
+
+      return user;
+    },
+
+    deleteUser: async (root, { id }, { User }) => {
+      return User.findByIdAndRemove(id);
     }
   }
 

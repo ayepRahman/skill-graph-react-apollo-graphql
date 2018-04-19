@@ -3,16 +3,24 @@ import autoBind from "react-autobind";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-import { Container, Columns, Column, Section, Box } from "bloomer";
+import { Container, Columns, Column, Section } from "bloomer";
 import {
-  Title,
+  Modal,
+  ModalBackground,
+  ModalCard,
+  ModalCardHeader,
+  ModalCardTitle,
+  ModalCardBody,
+  ModalCardFooter,
+  Delete
+} from "bloomer";
+import {
   Card,
   CardHeader,
   CardHeaderTitle,
   CardContent,
   Media,
   MediaContent,
-  Content,
   CardFooter,
   CardFooterItem
 } from "bloomer";
@@ -26,6 +34,16 @@ export class UsersSkillGraph extends Component {
 
   triggered() {
     alert("triggered");
+  }
+
+  renderUpdateModal(id) {
+    console.log(id);
+  }
+
+  renderDeleteModal(id) {
+    console.log(id);
+
+    return <div />;
   }
 
   renderUserQuery() {
@@ -54,14 +72,14 @@ export class UsersSkillGraph extends Component {
                       <CardFooter>
                         <CardFooterItem
                           style={{ cursor: "pointer" }}
-                          onClick={this.triggered}
+                          onClick={() => this.renderUpdateModal(user.id)}
                           className="has-text-link"
                         >
                           Edit
                         </CardFooterItem>
                         <CardFooterItem
                           style={{ cursor: "pointer" }}
-                          onClick={this.triggered}
+                          onClick={() => this.renderDeleteModal(user.id)}
                           className="has-text-danger"
                         >
                           Delete

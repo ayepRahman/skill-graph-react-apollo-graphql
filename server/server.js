@@ -1,13 +1,11 @@
 import express from "express";
-import { graphqlExpress, graphiqlExpress } from "graphql-server-express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
+import { graphqlExpress, graphiqlExpress } from "graphql-server-express";
 
 import { schema } from "./src/schema";
-import { User } from "./src/example-features-structure/model";
-
-console.log("User", User);
+import User from "./src/example-features-structure/model";
 
 // for using .env files
 require("dotenv").config();
@@ -18,11 +16,12 @@ const server = express();
 // mongoose.connect(`mongodb://localhost/test`);
 mongoose.connect(`mongodb://localhost:27017`, function(err) {
   if (err) {
-    console.log("Note Connected to MongoDB" + err);
+    console.log("Not Connected to MongoDB" + err);
   } else {
     console.log("mongodb://localhost:27017");
   }
 });
+
 // mongoose.connect(
 //   `mongodb://${process.env.DB_USER}:${
 //     process.env.DB_PASSWORD
@@ -45,7 +44,7 @@ server.use(
   bodyParser.json(),
   graphqlExpress({
     schema,
-    context: null
+    context: { User }
   })
 );
 

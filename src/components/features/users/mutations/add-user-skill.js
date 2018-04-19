@@ -105,50 +105,6 @@ export class AddNewUser extends Component {
       <Modal isActive={this.state.isOpen}>
         <ModalBackground />
 
-        <Mutation
-          mutation={ADD_NEW_USER}
-          update={(cache, { data: { addUser } }) => {
-            const { users } = cache.readQuery({
-              query: ALL_USERS_QUERY
-            });
-
-            cache.writeQuery({
-              query: ALL_USERS_QUERY,
-              data: { users: users.concat([addUser]) }
-            });
-          }}
-        >
-          {addUser => (
-            <ModalCard>
-              <ModalCardHeader>
-                <ModalCardTitle>Add User Skill</ModalCardTitle>
-                <Delete onClick={this.toggleModal} />
-              </ModalCardHeader>
-              <ModalCardBody>{this.renderForm()}</ModalCardBody>
-              <ModalCardFooter>
-                <Button
-                  onClick={event => this.handleSubmit(event, addUser)}
-                  isColor="primary"
-                  isOutlined
-                >
-                  Save
-                </Button>
-                <Button onClick={this.toggleModal} isColor="danger" isOutlined>
-                  Cancel
-                </Button>
-              </ModalCardFooter>
-            </ModalCard>
-          )}
-        </Mutation>
-      </Modal>
-    );
-  }
-
-  renderModal2() {
-    return (
-      <Modal isActive={this.state.isOpen}>
-        <ModalBackground />
-
         <Mutation mutation={ADD_NEW_USER}>
           {mutate => (
             <ModalCard>

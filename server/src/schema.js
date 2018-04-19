@@ -17,39 +17,20 @@ const typeDefs = `
 
   type Query {
     users: [User]
+    userById(id: String!): User
   }
 
   
   type Mutation {
     addUser(name: String!): User
+    updateUser(id: ID! name: String): User
+    deleteUser(id: ID!): User
   }
 
   type Subscription {
     userAdded(userId: ID!): User
   }
 `;
-
-// const typeDefs = `
-//   type User {
-//     id: ID!
-//     name: String
-//     skill: [Skill]
-//   }
-
-//   type Skill {
-//     id: ID!
-//     name: String
-//     level: Int
-//   }
-
-//   type Query {
-//     users: [User]
-//   }
-
-//   type Mutation {
-//     addNewUser(name: String!): User
-//   }
-// `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 // addMockFunctionsToSchema({ schema });
