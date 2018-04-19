@@ -2,11 +2,39 @@ import express from "express";
 import { graphqlExpress, graphiqlExpress } from "graphql-server-express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import mongoose from "mongoose";
 
 import { schema } from "./src/schema";
+import { User } from "./src/example-features-structure/model";
 
-const PORT = 8000;
+console.log("User", User);
+
+// for using .env files
+require("dotenv").config();
+
+const PORT = process.env.PORT || 8000;
 const server = express();
+
+// mongoose.connect(`mongodb://localhost/test`);
+mongoose.connect(`mongodb://localhost:27017`, function(err) {
+  if (err) {
+    console.log("Note Connected to MongoDB" + err);
+  } else {
+    console.log("mongodb://localhost:27017");
+  }
+});
+// mongoose.connect(
+//   `mongodb://${process.env.DB_USER}:${
+//     process.env.DB_PASSWORD
+//   }@ds149279.mlab.com:49279/arif_rahman_db`,
+//   function(err) {
+//     if (err) {
+//       console.log("Note Connected to MongoDB" + err);
+//     } else {
+//       console.log("Connected to MongoDB");
+//     }
+//   }
+// );
 
 // connecting server to client
 // server.use("*", cors({ origin: "https://localhost:9000" }));
@@ -16,7 +44,8 @@ server.use(
   "/graphql",
   bodyParser.json(),
   graphqlExpress({
-    schema
+    schema,
+    context: null
   })
 );
 

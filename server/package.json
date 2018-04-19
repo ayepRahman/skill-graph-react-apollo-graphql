@@ -23,6 +23,7 @@
     "graphql-tools": "^2.24.0",
     "merge-graphql-schemas": "^1.5.1",
     "mongodb": "^3.0.6",
+    "mongoose": "^5.0.15",
     "subscriptions-transport-ws": "^0.9.7"
   },
   "devDependencies": {

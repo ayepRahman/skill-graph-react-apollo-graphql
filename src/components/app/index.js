@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import Home from 'components/pages/home';
+import Home from "components/pages/home";
 // import ListPage from 'components/ListPage';
-import CreatePage from 'components/CreatePage';
-import DetailPage from 'components/DetailPage';
+import CreatePage from "components/CreatePage";
+import DetailPage from "components/DetailPage";
 
 export class App extends Component {
   render() {
