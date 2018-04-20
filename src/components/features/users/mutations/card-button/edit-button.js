@@ -3,7 +3,6 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import autoBind from "react-autobind";
 
-import { Container, Columns, Column, Section } from "bloomer";
 import {
   Modal,
   ModalBackground,
@@ -12,14 +11,15 @@ import {
   ModalCardTitle,
   ModalCardBody,
   ModalCardFooter,
-  Delete
+  Delete,
+  CardFooterItem
 } from "bloomer";
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
 import { ALL_USERS_QUERY } from "components/features/users/queries/user-skill-graph";
 
-export class AddNewUser extends Component {
+export class UpdateUserButton extends Component {
   constructor(props) {
     super(props);
 
@@ -31,6 +31,16 @@ export class AddNewUser extends Component {
     };
 
     autoBind(this);
+  }
+
+  componentWillReceiveProps() {
+    const {
+      entry: { name }
+    } = this.props;
+
+    this.setState({
+      name
+    });
   }
 
   toggleModal() {
@@ -45,20 +55,28 @@ export class AddNewUser extends Component {
     });
   }
 
-  handleSubmit = async (event, mutate) => {
+  handleSubmit = async (event, { mutate, id }) => {
     const { name } = this.state;
     event.preventDefault();
 
     await mutate({
-      variables: { name },
-      update: (cache, { data: { addUser } }) => {
+      variables: { id, name },
+      update: (cache, { data: { updateUser } }) => {
         const { users } = cache.readQuery({
           query: ALL_USERS_QUERY
         });
 
+        for (var i in users) {
+          if (users[i].id === updateUser.id) {
+            users[i].name = updateUser.name;
+
+            return users;
+          }
+        }
+
         cache.writeQuery({
           query: ALL_USERS_QUERY,
-          data: { users: users.concat([addUser]) }
+          data: { users: users }
         });
       }
       // optimisticResponse: {
@@ -75,11 +93,14 @@ export class AddNewUser extends Component {
   };
 
   renderForm() {
+    const { entry } = this.props;
+    const { id } = entry;
+
     return (
-      <Mutation mutation={ADD_NEW_USER}>
-        {addUser => (
+      <Mutation mutation={UPDATE_USER}>
+        {mutate => (
           <div>
-            <form onSubmit={event => this.handleSubmit(event, addUser)}>
+            <form onSubmit={event => this.handleSubmit(event, { mutate, id })}>
               <Field>
                 <Label isPulled="left">Name</Label>
                 <Control>
@@ -100,22 +121,23 @@ export class AddNewUser extends Component {
     );
   }
 
-  renderModal() {
+  renderModal(entry) {
+    const { id } = entry;
+
     return (
       <Modal isActive={this.state.isOpen}>
         <ModalBackground />
-
-        <Mutation mutation={ADD_NEW_USER}>
+        <Mutation mutation={UPDATE_USER}>
           {mutate => (
             <ModalCard>
               <ModalCardHeader>
-                <ModalCardTitle>Add User Skill</ModalCardTitle>
+                <ModalCardTitle>Update User</ModalCardTitle>
                 <Delete onClick={this.toggleModal} />
               </ModalCardHeader>
               <ModalCardBody>{this.renderForm()}</ModalCardBody>
               <ModalCardFooter>
                 <Button
-                  onClick={event => this.handleSubmit(event, mutate)}
+                  onClick={event => this.handleSubmit(event, { mutate, id })}
                   isColor="primary"
                   isOutlined
                 >
@@ -133,34 +155,30 @@ export class AddNewUser extends Component {
   }
 
   render() {
+    const { entry } = this.props;
+
     return (
-      <Section>
-        <Container>
-          <Columns isCentered>
-            <Column hasTextAlign="centered">
-              <Button
-                isSize="medium"
-                onClick={() => this.toggleModal()}
-                isColor="primary"
-              >
-                Add Skill
-              </Button>
-              {this.renderModal()}
-            </Column>
-          </Columns>
-        </Container>
-      </Section>
+      <div>
+        <CardFooterItem
+          style={{ cursor: "pointer" }}
+          onClick={this.toggleModal}
+          className="has-text-link"
+        >
+          Edit
+        </CardFooterItem>
+        {this.renderModal(entry)}
+      </div>
     );
   }
 }
 
-export const ADD_NEW_USER = gql`
-  mutation addUser($name: String!) {
-    addUser(name: $name) {
+export const UPDATE_USER = gql`
+  mutation updateUser($id: ID!, $name: String) {
+    updateUser(id: $id, name: $name) {
       id
       name
     }
   }
 `;
 
-export default AddNewUser;
+export default UpdateUserButton;

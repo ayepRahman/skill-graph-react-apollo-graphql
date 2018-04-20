@@ -5,29 +5,26 @@ import gql from "graphql-tag";
 
 import { Container, Columns, Column, Section } from "bloomer";
 import {
-  Modal,
-  ModalBackground,
-  ModalCard,
-  ModalCardHeader,
-  ModalCardTitle,
-  ModalCardBody,
-  ModalCardFooter,
-  Delete
-} from "bloomer";
-import {
   Card,
   CardHeader,
   CardHeaderTitle,
   CardContent,
   Media,
   MediaContent,
-  CardFooter,
-  CardFooterItem
+  CardFooter
 } from "bloomer";
+
+import EditButton from "components/features/users/mutations/card-button/edit-button";
+import DeleteButton from "components/features/users/mutations/card-button/delete-button";
 
 export class UsersSkillGraph extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isOpenEdit: false,
+      isOpenDelete: false
+    };
 
     autoBind(this);
   }
@@ -36,70 +33,56 @@ export class UsersSkillGraph extends Component {
     alert("triggered");
   }
 
-  renderUpdateModal(id) {
-    console.log(id);
+  toggleEditModal() {
+    this.setState({
+      isOpenEdit: !this.state.isOpenEdit
+    });
   }
 
-  renderDeleteModal(id) {
-    console.log(id);
-
-    return <div />;
-  }
-
-  renderUserQuery() {
-    return (
-      <Query query={ALL_USERS_QUERY}>
-        {({ loading, error, data }) => {
-          const { users } = data;
-
-          if (loading) return <h1>LOADING!!!!!</h1>;
-          if (error) return `Error!: ${error}`;
-
-          return (
-            <Columns isMultiline>
-              {users.map(user => {
-                return (
-                  <Column key={user.id} isSize="1/3">
-                    <Card>
-                      <CardHeader hasTextAlign="centered">
-                        <CardHeaderTitle>{user.name}</CardHeaderTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <Media>
-                          <MediaContent>user skill graph here</MediaContent>
-                        </Media>
-                      </CardContent>
-                      <CardFooter>
-                        <CardFooterItem
-                          style={{ cursor: "pointer" }}
-                          onClick={() => this.renderUpdateModal(user.id)}
-                          className="has-text-link"
-                        >
-                          Edit
-                        </CardFooterItem>
-                        <CardFooterItem
-                          style={{ cursor: "pointer" }}
-                          onClick={() => this.renderDeleteModal(user.id)}
-                          className="has-text-danger"
-                        >
-                          Delete
-                        </CardFooterItem>
-                      </CardFooter>
-                    </Card>
-                  </Column>
-                );
-              })}
-            </Columns>
-          );
-        }}
-      </Query>
-    );
+  toggleDeleteModal() {
+    this.setState({
+      isOpenDelete: !this.state.isOpenDelete
+    });
   }
 
   render() {
     return (
       <Section>
-        <Container>{this.renderUserQuery()}</Container>
+        <Container>
+          <Query query={ALL_USERS_QUERY}>
+            {({ loading, error, data }) => {
+              const { users } = data;
+
+              if (loading) return <h1>LOADING!!!!!</h1>;
+              if (error) return `Error!: ${error}`;
+
+              return (
+                <Columns isMultiline>
+                  {users.map(user => {
+                    return (
+                      <Column key={user.id} isSize="1/3">
+                        <Card>
+                          <CardHeader hasTextAlign="centered">
+                            <CardHeaderTitle>{user.name}</CardHeaderTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <Media>
+                              <MediaContent>Radar Chart</MediaContent>
+                            </Media>
+                          </CardContent>
+                          <CardFooter>
+                            <EditButton entry={user} />
+                            <DeleteButton entry={user} />
+                          </CardFooter>
+                        </Card>
+                      </Column>
+                    );
+                  })}
+                </Columns>
+              );
+            }}
+          </Query>
+        </Container>
       </Section>
     );
   }

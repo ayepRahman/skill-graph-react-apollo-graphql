@@ -11,14 +11,15 @@ import {
   ModalCardTitle,
   ModalCardBody,
   ModalCardFooter,
-  Delete
+  Delete,
+  CardFooterItem
 } from "bloomer";
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
 import { ALL_USERS_QUERY } from "components/features/users/queries/user-skill-graph";
 
-export class UpdateUser extends Component {
+export class DeleteUserButton extends Component {
   constructor(props) {
     super(props);
 
@@ -50,14 +51,23 @@ export class UpdateUser extends Component {
 
     await mutate({
       variables: { id, name },
-      update: (cache, { data: { updateUser } }) => {
+      update: (cache, { data: { deleteUser } }) => {
         const { users } = cache.readQuery({
           query: ALL_USERS_QUERY
         });
 
+        debugger;
+        for (var i in users) {
+          let obj = users[i];
+
+          if (obj.id === deleteUser.id) {
+            users.splice(users.indexOf(obj), 1);
+          }
+        }
+
         cache.writeQuery({
           query: ALL_USERS_QUERY,
-          data: { users: users.concat([updateUser]) }
+          data: { users: users }
         });
       }
       // optimisticResponse: {
@@ -73,56 +83,29 @@ export class UpdateUser extends Component {
     });
   };
 
-  renderForm() {
-    const { id } = this.props;
+  renderModal(entry) {
+    const { id, name } = entry;
 
     return (
-      <Mutation mutation={UPDATE_USER}>
-        {mutate => (
-          <div>
-            <form onSubmit={event => this.handleSubmit(event, { mutate, id })}>
-              <Field>
-                <Label isPulled="left">Name</Label>
-                <Control>
-                  <Input
-                    name="name"
-                    type="text"
-                    placeholder="Username"
-                    value={this.state.name}
-                    onChange={this.handleChange}
-                    required
-                  />
-                </Control>
-              </Field>
-            </form>
-          </div>
-        )}
-      </Mutation>
-    );
-  }
-
-  render() {
-    const { isOpen, id } = this.props;
-
-    return (
-      <Modal isActive={isOpen}>
+      <Modal isActive={this.state.isOpen}>
         <ModalBackground />
-
-        <Mutation mutation={UPDATE_USER}>
+        <Mutation mutation={DELETE_USER}>
           {mutate => (
             <ModalCard>
               <ModalCardHeader>
-                <ModalCardTitle>Update User</ModalCardTitle>
+                <ModalCardTitle>Delete User</ModalCardTitle>
                 <Delete onClick={this.toggleModal} />
               </ModalCardHeader>
-              <ModalCardBody>{this.renderForm()}</ModalCardBody>
+              <ModalCardBody>
+                {`Hey ${name}, you sure you wanna delete?`}
+              </ModalCardBody>
               <ModalCardFooter>
                 <Button
                   onClick={event => this.handleSubmit(event, { mutate, id })}
                   isColor="primary"
                   isOutlined
                 >
-                  Save
+                  Confirm
                 </Button>
                 <Button onClick={this.toggleModal} isColor="danger" isOutlined>
                   Cancel
@@ -134,15 +117,32 @@ export class UpdateUser extends Component {
       </Modal>
     );
   }
+
+  render() {
+    const { entry } = this.props;
+
+    return (
+      <div>
+        <CardFooterItem
+          style={{ cursor: "pointer" }}
+          onClick={this.toggleModal}
+          className="has-text-danger"
+        >
+          Delete
+        </CardFooterItem>
+        {this.renderModal(entry)}
+      </div>
+    );
+  }
 }
 
-export const UPDATE_USER = gql`
-  mutation updateUser($id: ID!) {
-    updateUser(id: $id) {
+export const DELETE_USER = gql`
+  mutation deleteUser($id: ID!) {
+    deleteUser(id: $id) {
       id
       name
     }
   }
 `;
 
-export default UpdateUser;
+export default DeleteUserButton;

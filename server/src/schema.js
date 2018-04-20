@@ -32,6 +32,15 @@ const typeDefs = `
   }
 `;
 
+// example for merging schemas src/root schema!!!
+// chripSchema coming from features schema
+
+// export const schema = mergeSchemas({
+//   schemas: [chirpSchema, authorSchema],
+// });
+
+// exmaple for merging resolvers
+
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 // addMockFunctionsToSchema({ schema });
 

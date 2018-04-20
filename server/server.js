@@ -18,7 +18,7 @@ mongoose.connect(`mongodb://localhost:27017`, function(err) {
   if (err) {
     console.log("Not Connected to MongoDB" + err);
   } else {
-    console.log("mongodb://localhost:27017");
+    console.log("Connected to mongodb://localhost:27017");
   }
 });
 
