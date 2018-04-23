@@ -6,7 +6,7 @@ import { graphqlExpress, graphiqlExpress } from "graphql-server-express";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
-
+import jwt from "jsonwebtoken";
 import { schema } from "./src/schema";
 import User from "./src/example-features-structure/model";
 
@@ -15,8 +15,25 @@ require("dotenv").config();
 
 const CLIENT_PORT = process.env.CLIENT_PORT || 9000;
 const SERVER_PORT = process.env.SERVER_PORT || 8000;
+const SECRET = process.env.SECRET || "s3cr3t";
+
 const server = express();
 const ws = createServer(server);
+
+const addUser = async req => {
+  const token = req.headers.authorization;
+
+  console.log("JWT", token);
+
+  try {
+    const { user } = await jwt.verify(token, SECRET);
+    req.user = user;
+  } catch (error) {
+    console.log(error);
+  }
+
+  req.next();
+};
 
 // mongoose.connect(`mongodb://localhost/test`);
 mongoose.connect(`mongodb://localhost:27017`, function(err) {
@@ -42,15 +59,18 @@ mongoose.connect(`mongodb://localhost:27017`, function(err) {
 
 // connecting server to client
 server.use("*", cors({ origin: `http://localhost:${CLIENT_PORT}` }));
-// server.use(cors());
-
+server.use(addUser);
 server.use(
   "/graphql",
   bodyParser.json(),
-  graphqlExpress({
+  graphqlExpress(req => ({
     schema,
-    context: { User }
-  })
+    context: {
+      User,
+      SECRET,
+      user: req.user
+    }
+  }))
 );
 
 // using the endpoint from /graphql to connect to /graphiql

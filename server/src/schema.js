@@ -12,12 +12,14 @@ import { rootResolvers as resolvers } from "./resolvers";
 const typeDefs = `
   type User {
     id: ID!
-    name: String
+    name: String!
+    email: String!
   }
 
   type Query {
-    users: [User]
-    userById(id: String!): User
+    users: [User!]!
+    userById(id: String!): User!
+    me: User!
   }
 
   
@@ -25,6 +27,8 @@ const typeDefs = `
     addUser(name: String!): User
     updateUser(id: ID! name: String): User
     deleteUser(id: ID!): User
+    register(name: String!, email: String!, password: String! ): User!
+    login(email: String!, password: String!): String!
   }
 
   type Subscription {
