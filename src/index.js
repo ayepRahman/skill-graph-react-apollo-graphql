@@ -3,6 +3,9 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
 import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
+import { WebSocketLink } from "apollo-link-ws";
+import { split } from "apollo-link";
+import { getMainDefinition } from "apollo-utilities";
 
 /*
   # Adding MockUp Network Interface for testing
@@ -24,15 +27,34 @@ import "styles/index.css";
 // addMockFunctionsToSchema({ schema });
 // const mockSchemaLink = new SchemaLink({ schema });
 
-// this is for connecting to localhost server
+// Connecting Server
 const httpLink = new HttpLink({
   uri: `http://localhost:8000/graphql`
 });
 
+// Connecting to WebSocket
+const wsLink = new WebSocketLink({
+  uri: `ws://localhost:8000/subscriptions`,
+  options: {
+    reconnect: true
+  }
+});
+
+// Split Link to depending on the operationis being sent
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+
+    return kind === "OperationDefinition" && operation === "subscription";
+  },
+  wsLink,
+  httpLink
+);
+
 const apolloCache = new InMemoryCache(window.__APOLLO_STATE__);
 
 const client = new ApolloClient({
-  link: httpLink,
+  link: link,
   cache: apolloCache
 });
 

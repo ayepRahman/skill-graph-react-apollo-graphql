@@ -134,22 +134,20 @@ export class AddNewUser extends Component {
 
   render() {
     return (
-      <Section>
-        <Container>
-          <Columns isCentered>
-            <Column hasTextAlign="centered">
-              <Button
-                isSize="medium"
-                onClick={() => this.toggleModal()}
-                isColor="primary"
-              >
-                Add Skill
-              </Button>
-              {this.renderModal()}
-            </Column>
-          </Columns>
-        </Container>
-      </Section>
+      <Container>
+        <Columns isCentered>
+          <Column hasTextAlign="centered">
+            <Button
+              isSize="medium"
+              onClick={() => this.toggleModal()}
+              isColor="primary"
+            >
+              Add Skill
+            </Button>
+            {this.renderModal()}
+          </Column>
+        </Columns>
+      </Container>
     );
   }
 }

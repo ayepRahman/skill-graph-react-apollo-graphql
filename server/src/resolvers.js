@@ -2,7 +2,7 @@ import { PubSub, withFilter } from "graphql-subscriptions";
 
 const pubsub = new PubSub();
 
-export const resolvers = {
+export const rootResolvers = {
   Query: {
     users: async (root, args, { User }) => {
       const users = await User.find();
@@ -23,7 +23,16 @@ export const resolvers = {
   Mutation: {
     addUser: async (root, args, { User }) => {
       const user = await new User(args).save();
+
+      if (!user) throw new Error("User does not exist");
+
       user._id = user._id.toString();
+
+      console.log("Mutatation: addUser", user);
+
+      pubsub.publish("userAdded", {
+        userAdded: user
+      });
 
       return user;
     },
@@ -40,13 +49,11 @@ export const resolvers = {
     deleteUser: async (root, { id }, { User }) => {
       return User.findByIdAndRemove(id);
     }
+  },
+
+  Subscription: {
+    userAdded: {
+      subscribe: () => pubsub.asyncIterator("userAdded")
+    }
   }
-
-  // addUser: (root, { message }) => {
-  //   const user = users.find(user => user.id === message.userId);
-
-  //   if (!user) throw new Error("User does not exist");
-
-  //   const newUser = { id: String() };
-  // }
 };

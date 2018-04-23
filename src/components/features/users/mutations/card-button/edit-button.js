@@ -33,7 +33,7 @@ export class UpdateUserButton extends Component {
     autoBind(this);
   }
 
-  componentWillReceiveProps() {
+  componentDidMount() {
     const {
       entry: { name }
     } = this.props;
