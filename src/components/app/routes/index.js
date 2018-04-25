@@ -13,8 +13,8 @@ export class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route exact path="/" component={SignUpPage} />
-          <Route path="/login" component={LoginPage} />
+          <Route exact path="/" component={LoginPage} />
+          <Route path="/signup" component={SignUpPage} />
           <Route path="/create" component={CreatePage} />
           <Route path="/post/:id" component={DetailPage} />
         </Switch>

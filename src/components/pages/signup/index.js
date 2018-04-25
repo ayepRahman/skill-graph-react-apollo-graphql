@@ -118,7 +118,7 @@ export class SignUpPage extends Component {
                 </Control>
                 <Control>
                   <p>
-                    already a user? <Link to="/login">login</Link> instead.
+                    already a user? <Link to="/">login</Link> instead.
                   </p>
                 </Control>
               </Field>

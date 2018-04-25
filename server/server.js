@@ -7,8 +7,8 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
 import jwt from "jsonwebtoken";
-import { schema } from "./src/schema";
-import User from "./src/example-features-structure/model";
+import { schema } from "./src/rootSchema";
+import User from "./src/users/model";
 
 // for using .env files
 require("dotenv").config();
