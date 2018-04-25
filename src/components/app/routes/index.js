@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+import SignUpPage from "components/pages/signup";
+import LoginPage from "components/pages/login";
 import Home from "components/pages/home";
-// import ListPage from 'components/ListPage';
+
 import CreatePage from "components/CreatePage";
 import DetailPage from "components/DetailPage";
 
@@ -10,11 +12,12 @@ export class App extends Component {
   render() {
     return (
       <Router>
-        <div>
-          <Route exact path="/" component={Home} />
+        <Switch>
+          <Route exact path="/" component={SignUpPage} />
+          <Route path="/login" component={LoginPage} />
           <Route path="/create" component={CreatePage} />
           <Route path="/post/:id" component={DetailPage} />
-        </div>
+        </Switch>
       </Router>
     );
   }

@@ -23,19 +23,12 @@ export const rootResolvers = {
     },
     me: async (root, args, { User, user }) => {
       if (user) {
-        const users = await User.where({ _id: user.id });
+        const users = await User.findById(user.id);
 
-        return users.map(user => {
-          console.log("what is user:", user);
+        console.log("Users", users);
 
-          console.log("first check:", typeof user.name);
-
-          user._id = user._id.toString();
-
-          console.log("second check:", typeof user._id);
-
-          return user;
-        });
+        debugger;
+        return users;
       }
 
       return null;

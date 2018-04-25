@@ -17,7 +17,7 @@ import { getMainDefinition } from "apollo-utilities";
 // import { SchemaLink } from "apollo-link-schema";
 // import { typeDefs } from "schema/schema";
 
-import App from "./components/app";
+import App from "./components/app/routes";
 
 import "bulma/css/bulma.css";
 import "styles/index.css";

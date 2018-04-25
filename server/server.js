@@ -23,7 +23,7 @@ const ws = createServer(server);
 const addUser = async req => {
   const token = req.headers.authorization;
 
-  console.log("JWT", token);
+  console.log("JWT:", token);
 
   try {
     const { user } = await jwt.verify(token, SECRET);
