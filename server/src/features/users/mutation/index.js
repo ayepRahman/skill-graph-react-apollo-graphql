@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import _ from "lodash";
 
+import { tryLogin } from "../../../auth";
+
 const pubsub = new PubSub();
 
 export default {
@@ -26,33 +28,36 @@ export default {
     return user;
   },
 
-  login: async (root, { email, password }, { User, SECRET }) => {
-    const user = await User.where({ email: email });
-    const userObj = user[0];
+  login: (parent, { email, password }, { User, SECRET }) =>
+    tryLogin(email, password, User, SECRET),
 
-    if (!userObj) {
-      throw new Error("No user with that email");
-    }
+  // login: async (root, { email, password }, { User, SECRET }) => {
+  //   const user = await User.where({ email: email });
+  //   const userObj = user[0];
 
-    // comparing plaintext password with db.user.password
-    const valid = await bcrypt.compare(password, userObj.password);
+  //   if (!userObj) {
+  //     throw new Error("No user with that email");
+  //   }
 
-    if (!valid) {
-      throw new Error("Incorrect Password La");
-    }
+  //   // comparing plaintext password with db.user.password
+  //   const valid = await bcrypt.compare(password, userObj.password);
 
-    // verify: need secret | user me for authentication
-    // decode: no secret | user me on the client side
-    const token = jwt.sign(
-      {
-        user: _.pick(userObj, ["id", "name"])
-      },
-      SECRET,
-      { expiresIn: "1y" }
-    );
+  //   if (!valid) {
+  //     throw new Error("Incorrect Password La");
+  //   }
 
-    return token;
-  },
+  //   // verify: need secret | user me for authentication
+  //   // decode: no secret | user me on the client side
+  //   const token = jwt.sign(
+  //     {
+  //       user: _.pick(userObj, ["id", "name"])
+  //     },
+  //     SECRET,
+  //     { expiresIn: "1y" }
+  //   );
+
+  //   return token;
+  // },
 
   addUser: async (root, args, { User }) => {
     const user = await new User(args).save();

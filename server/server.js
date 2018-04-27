@@ -7,8 +7,8 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
 import jwt from "jsonwebtoken";
-import { schema } from "./src/rootSchema";
-import User from "./src/users/model";
+import { schema } from "./src/features/rootSchema";
+import User from "./src/features/users/model";
 
 // for using .env files
 require("dotenv").config();
@@ -16,6 +16,7 @@ require("dotenv").config();
 const CLIENT_PORT = process.env.CLIENT_PORT || 9000;
 const SERVER_PORT = process.env.SERVER_PORT || 8000;
 const SECRET = process.env.SECRET || "s3cr3t";
+const SECRET_2 = process.env.SECRET_2 || "s3cr3t2";
 
 const server = express();
 const ws = createServer(server);
@@ -68,6 +69,7 @@ server.use(
     context: {
       User,
       SECRET,
+      SECRET_2,
       user: req.user
     }
   }))

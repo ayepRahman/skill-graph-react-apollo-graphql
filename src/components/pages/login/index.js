@@ -55,7 +55,7 @@ export class SignUpPage extends Component {
   };
 
   renderForm() {
-    const { name, email, password } = this.state;
+    const { email, password } = this.state;
     const isDisabled = email && password;
 
     return (
@@ -105,8 +105,8 @@ export class SignUpPage extends Component {
                 </Control>
                 <Control>
                   <p>
-                    Not registered? <Link to="/signup">Register</Link> as new
-                    user, it's free!
+                    Not a user? <Link to="/signup">Register</Link> now, it's
+                    free!
                   </p>
                 </Control>
               </Field>
