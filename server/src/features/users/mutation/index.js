@@ -28,8 +28,8 @@ export default {
     return user;
   },
 
-  login: (parent, { email, password }, { User, SECRET }) =>
-    tryLogin(email, password, User, SECRET),
+  login: (parent, { email, password }, { User, SECRET, SECRET_2 }) =>
+    tryLogin(email, password, User, SECRET, SECRET_2),
 
   // login: async (root, { email, password }, { User, SECRET }) => {
   //   const user = await User.where({ email: email });

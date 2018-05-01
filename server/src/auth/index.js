@@ -26,7 +26,7 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
   return [createToken, createRefreshToken];
 };
 
-export const tryLogin = async (email, password, User, SECRET) => {
+export const tryLogin = async (email, password, User, SECRET, SECRET_2) => {
   const user = await User.where({ email: email });
 
   if (!user) {
