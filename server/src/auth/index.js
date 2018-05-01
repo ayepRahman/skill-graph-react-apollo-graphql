@@ -3,6 +3,8 @@ import _ from "lodash";
 import bcrypt from "bcrypt";
 
 export const createTokens = async (user, SECRET, SECRET_2) => {
+  // verify: need secret | user me for authentication
+  // decode: no secret | user me on the client side
   const createToken = jwt.sign(
     {
       user: _.pick(user, ["_id"])
@@ -64,7 +66,7 @@ export const tryLogin = async (email, password, User, SECRET, SECRET_2) => {
   const [token, refreshToken] = await createTokens(
     user,
     SECRET,
-    user.refreshSecret
+    refreshTokenSecret
   );
 
   return {
