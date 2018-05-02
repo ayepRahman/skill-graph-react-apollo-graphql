@@ -18,7 +18,7 @@ const typeDefs = `
       ok: Boolean!
       token: String
       refreshToken: String
-      error: [Error!]
+      errors: [Error!]
     }
 
     type Error {

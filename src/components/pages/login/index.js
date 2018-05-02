@@ -16,7 +16,7 @@ import {
 
 import { Field, Label, Control, Input, Button, Notification } from "bloomer";
 
-export class SignUpPage extends Component {
+export class LoginPage extends Component {
   constructor(props) {
     super(props);
 
@@ -43,15 +43,22 @@ export class SignUpPage extends Component {
     const { name, email, password } = this.state;
     event.preventDefault();
 
-    await mutate({
+    const response = await mutate({
       variables: { name, email, password }
     });
 
-    // name = "";
-    // email = "";
-    // password = "";
+    const { ok, token, refreshToken } = response.data.login;
 
-    this.props.history.push("/login");
+    debugger;
+
+    // checking the status ok the login, setting the token on localStorage
+    if (ok) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      // TODO: push to skill profile page once succesfull
+      // this.props.history.push("/");
+    }
   };
 
   renderForm() {
@@ -61,7 +68,6 @@ export class SignUpPage extends Component {
     return (
       <Mutation mutation={LOGIN_USER}>
         {(mutate, { data, loading, error }) => {
-          debugger;
           return (
             <form onSubmit={event => this.handleSubmit(event, mutate)}>
               {error && <Notification isColor="danger">{error}</Notification>}
@@ -158,8 +164,16 @@ export class SignUpPage extends Component {
 
 export const LOGIN_USER = gql`
   mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password)
+    login(email: $email, password: $password) {
+      ok
+      token
+      refreshToken
+      errors {
+        path
+        message
+      }
+    }
   }
 `;
 
-export default SignUpPage;
+export default LoginPage;

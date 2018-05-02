@@ -47,11 +47,7 @@ export class SignUpPage extends Component {
       variables: { name, email, password }
     });
 
-    // name = "";
-    // email = "";
-    // password = "";
-
-    this.props.history.push("/login");
+    this.props.history.push("/");
   };
 
   renderForm() {
@@ -171,9 +167,16 @@ export class SignUpPage extends Component {
 export const REGISTER_NEW_USER = gql`
   mutation register($name: String!, $email: String!, $password: String!) {
     register(name: $name, email: $email, password: $password) {
-      id
-      name
-      email
+      ok
+      user {
+        id
+        name
+        email
+      }
+      errors {
+        path
+        message
+      }
     }
   }
 `;

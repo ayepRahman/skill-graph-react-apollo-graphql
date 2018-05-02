@@ -32,11 +32,7 @@ export const tryLogin = async (email, password, User, SECRET, SECRET_2) => {
   let user = await User.find({ email: email });
   user = user[0];
 
-  console.log("TryLogin plaintext pasword:", password);
-  console.log("TryLogin user:", user);
-
   if (!user) {
-    // throw new Error("Invalid Email");
     return {
       ok: false,
       errors: [
@@ -52,8 +48,6 @@ export const tryLogin = async (email, password, User, SECRET, SECRET_2) => {
   const valid = await bcrypt.compare(password, user.password);
 
   if (!valid) {
-    // throw new Error("Invalid Password");
-
     return {
       ok: false,
       errors: [
