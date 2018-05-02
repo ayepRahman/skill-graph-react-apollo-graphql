@@ -21,20 +21,18 @@ const SECRET_2 = process.env.SECRET_2 || "s3cr3t2";
 const server = express();
 const ws = createServer(server);
 
-const addUser = async req => {
-  const token = req.headers.authorization;
+// const addUser = async req => {
+//   const token = req.headers.authorization;
 
-  console.log("JWT:", token);
+//   try {
+//     const { user } = await jwt.verify(token, SECRET);
+//     req.user = user;
+//   } catch (error) {
+//     console.log(error);
+//   }
 
-  try {
-    const { user } = await jwt.verify(token, SECRET);
-    req.user = user;
-  } catch (error) {
-    console.log(error);
-  }
-
-  req.next();
-};
+//   req.next();
+// };
 
 // mongoose.connect(`mongodb://localhost/test`);
 mongoose.connect(`mongodb://localhost:27017`, function(err) {
@@ -61,7 +59,7 @@ mongoose.connect(`mongodb://localhost:27017`, function(err) {
 
 // connecting server to client
 server.use("*", cors({ origin: `http://localhost:${CLIENT_PORT}` }));
-server.use(addUser);
+// server.use(addUser);
 server.use(
   "/graphql",
   bodyParser.json(),

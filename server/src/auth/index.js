@@ -29,7 +29,11 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
 };
 
 export const tryLogin = async (email, password, User, SECRET, SECRET_2) => {
-  const user = await User.where({ email: email });
+  let user = await User.find({ email: email });
+  user = user[0];
+
+  console.log("TryLogin plaintext pasword:", password);
+  console.log("TryLogin user:", user);
 
   if (!user) {
     // throw new Error("Invalid Email");
