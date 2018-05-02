@@ -11,7 +11,8 @@ import {
   Column,
   Box,
   Title,
-  Subtitle
+  Subtitle,
+  Help
 } from "bloomer";
 
 import { Field, Label, Control, Input, Button, Notification } from "bloomer";
@@ -47,9 +48,7 @@ export class LoginPage extends Component {
       variables: { name, email, password }
     });
 
-    const { ok, token, refreshToken } = response.data.login;
-
-    debugger;
+    const { ok, token, refreshToken, errors } = response.data.login;
 
     // checking the status ok the login, setting the token on localStorage
     if (ok) {
@@ -58,7 +57,16 @@ export class LoginPage extends Component {
 
       // TODO: push to skill profile page once succesfull
       // this.props.history.push("/");
+    } else {
+      const err = {};
+      errors.forEach(({ path, message }) => {
+        err[`${path}Error`] = message;
+      });
+
+      this.setState(err);
     }
+
+    debugger;
   };
 
   renderForm() {
@@ -83,6 +91,7 @@ export class LoginPage extends Component {
                     required
                   />
                 </Control>
+                <Help isColor="danger">This username is available</Help>
               </Field>
               <Field>
                 <Label isPulled="left">Password</Label>
@@ -96,6 +105,7 @@ export class LoginPage extends Component {
                     required
                   />
                 </Control>
+                <Help isColor="danger">This username is available</Help>
               </Field>
 
               <Field isGrouped>
