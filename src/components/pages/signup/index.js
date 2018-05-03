@@ -11,7 +11,8 @@ import {
   Column,
   Box,
   Title,
-  Subtitle
+  Subtitle,
+  Help
 } from "bloomer";
 
 import { Field, Label, Control, Input, Button, Notification } from "bloomer";
@@ -23,14 +24,11 @@ export class SignUpPage extends Component {
     this.state = {
       name: "",
       email: "",
-      password: ""
+      password: "",
+      errors: {}
     };
 
     autoBind(this);
-  }
-
-  componentWillMount() {
-    this;
   }
 
   handleChange(event) {
@@ -43,21 +41,41 @@ export class SignUpPage extends Component {
     const { name, email, password } = this.state;
     event.preventDefault();
 
-    await mutate({
+    const response = await mutate({
       variables: { name, email, password }
     });
 
-    this.props.history.push("/");
+    debugger;
+
+    const { ok, errors } = response.data.register;
+
+    if (ok) {
+      this.props.history.push("/");
+    } else {
+      const err = {};
+      errors.forEach(({ path, message }) => {
+        err[`${path}Error`] = message;
+      });
+
+      this.setState({
+        errors: err
+      });
+
+      debugger;
+    }
   };
 
   renderForm() {
-    const { name, email, password } = this.state;
+    const { name, email, password, errors } = this.state;
+    const { nameError, emailError, passwordError } = errors;
     const isDisabled = name && email && password;
 
     return (
       <Mutation mutation={REGISTER_NEW_USER}>
         {(mutate, { data, loading, error }) => {
-          debugger;
+          console.log("mutate error:", error);
+          console.log("ERRORS:", errors);
+          console.log("mutate data:", data);
           return (
             <form onSubmit={event => this.handleSubmit(event, mutate)}>
               {error && <Notification isColor="danger">{error}</Notification>}
@@ -65,6 +83,7 @@ export class SignUpPage extends Component {
                 <Label isPulled="left">Username</Label>
                 <Control>
                   <Input
+                    className={!!nameError ? "input is-danger" : ""}
                     name="name"
                     type="text"
                     placeholder="Username"
@@ -73,11 +92,13 @@ export class SignUpPage extends Component {
                     required
                   />
                 </Control>
+                {!!nameError && <Help isColor="danger">{nameError}</Help>}
               </Field>
               <Field>
                 <Label isPulled="left">Email</Label>
                 <Control>
                   <Input
+                    className={!!emailError ? "input is-danger" : ""}
                     name="email"
                     type="email"
                     placeholder="Email"
@@ -86,11 +107,13 @@ export class SignUpPage extends Component {
                     required
                   />
                 </Control>
+                {!!emailError && <Help isColor="danger">{emailError}</Help>}
               </Field>
               <Field>
                 <Label isPulled="left">Password</Label>
                 <Control>
                   <Input
+                    className={!!passwordError ? "input is-danger" : ""}
                     name="password"
                     type="password"
                     placeholder="Password"
@@ -99,6 +122,9 @@ export class SignUpPage extends Component {
                     required
                   />
                 </Control>
+                {!!passwordError && (
+                  <Help isColor="danger">{passwordError}</Help>
+                )}
               </Field>
 
               <Field isGrouped>

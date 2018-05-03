@@ -63,7 +63,9 @@ export class LoginPage extends Component {
         err[`${path}Error`] = message;
       });
 
-      this.setState(err);
+      this.setState({
+        err
+      });
     }
 
     debugger;

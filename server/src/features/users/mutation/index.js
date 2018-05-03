@@ -29,7 +29,7 @@ export default {
         errors: [
           {
             path: "name",
-            message: "username must in between 5 to 20 characters"
+            message: "Username must in between 5 to 20 characters"
           }
         ]
       };
@@ -41,7 +41,7 @@ export default {
         errors: [
           {
             path: "email",
-            message: "invalid email address"
+            message: "Invalid email address"
           }
         ]
       };
@@ -53,7 +53,7 @@ export default {
         errors: [
           {
             path: "password",
-            message: "password must in between 5 to 50 characters"
+            message: "Password must in between 5 to 50 characters"
           }
         ]
       };
