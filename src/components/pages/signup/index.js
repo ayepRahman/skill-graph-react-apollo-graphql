@@ -44,8 +44,6 @@ export class SignUpPage extends Component {
       variables: { name, email, password }
     });
 
-    debugger;
-
     const { ok, errors } = response.data.register;
 
     if (ok) {
@@ -59,8 +57,6 @@ export class SignUpPage extends Component {
       this.setState({
         errors: err
       });
-
-      debugger;
     }
   };
 
@@ -190,11 +186,6 @@ export const REGISTER_NEW_USER = gql`
   mutation register($name: String!, $email: String!, $password: String!) {
     register(name: $name, email: $email, password: $password) {
       ok
-      user {
-        id
-        name
-        email
-      }
       errors {
         path
         message

@@ -63,8 +63,6 @@ export class LoginPage extends Component {
         errors: err
       });
     }
-
-    debugger;
   };
 
   renderForm() {

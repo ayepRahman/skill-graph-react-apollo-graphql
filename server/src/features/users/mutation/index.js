@@ -2,77 +2,100 @@ import { PubSub } from "graphql-subscriptions";
 import bcrypt from "bcrypt";
 
 import { tryLogin } from "../../../auth";
-import { validate } from "../../../auth/validate";
+// import { validate } from "../../../auth/validate";
+import { formatErrors } from "../../../auth/formatErrors";
 
 const pubsub = new PubSub();
 
 export default {
   register: async (root, args, { User }) => {
-    // We get User models by passing in context in Server.js
     let user = args;
 
-    if (!user) {
-      return {
-        ok: false,
-        errors: [
-          {
-            path: "register",
-            message: "User does not exist"
-          }
-        ]
-      };
-    }
+    try {
+      user.password = await bcrypt.hash(user.password, 12);
+      user = await new User(user).save();
+      user._id = user._id.toString();
 
-    if (user.name.length < 5 || user.name.length > 20) {
-      return {
-        ok: false,
-        errors: [
-          {
-            path: "name",
-            message: "Username must in between 5 to 20 characters"
-          }
-        ]
-      };
-    }
+      // subscription
+      pubsub.publish("userAdded", {
+        userAdded: user
+      });
 
-    if (!validate(user.email)) {
+      return {
+        ok: true,
+        user
+      };
+    } catch (errors) {
+      // console.log("catch errors:", errors);
       return {
         ok: false,
-        errors: [
-          {
-            path: "email",
-            message: "Invalid email address"
-          }
-        ]
+        errors: formatErrors(errors, User)
       };
     }
+    // We get User models by passing in context in Server.js
 
-    if (user.password.length < 5 || user.password.length > 50) {
-      return {
-        ok: false,
-        errors: [
-          {
-            path: "password",
-            message: "Password must in between 5 to 50 characters"
-          }
-        ]
-      };
-    }
+    // if (!user) {
+    //   return {
+    //     ok: false,
+    //     errors: [
+    //       {
+    //         path: "register",
+    //         message: "User does not exist"
+    //       }
+    //     ]
+    //   };
+    // }
+
+    // if (user.name.length < 5 || user.name.length > 20) {
+    //   return {
+    //     ok: false,
+    //     errors: [
+    //       {
+    //         path: "name",
+    //         message: "Username must in between 5 to 20 characters"
+    //       }
+    //     ]
+    //   };
+    // }
+
+    // if (!validate(user.email)) {
+    //   return {
+    //     ok: false,
+    //     errors: [
+    //       {
+    //         path: "email",
+    //         message: "Invalid email address"
+    //       }
+    //     ]
+    //   };
+    // }
+
+    // if (user.password.length < 5 || user.password.length > 50) {
+    //   return {
+    //     ok: false,
+    //     errors: [
+    //       {
+    //         path: "password",
+    //         message: "Password must in between 5 to 50 characters"
+    //       }
+    //     ]
+    //   };
+    // }
     // hashing user password using bcrypt
-    user.password = await bcrypt.hash(user.password, 12);
-    user = await new User(user).save();
+    // user.password = await bcrypt.hash(user.password, 12);
+    // user = await new User(user).save();
 
-    user._id = user._id.toString();
+    // user._id = user._id.toString();
 
-    // subscription
-    pubsub.publish("userAdded", {
-      userAdded: user
-    });
+    // // subscription
+    // pubsub.publish("userAdded", {
+    //   userAdded: user
+    // });
 
-    return {
-      ok: true,
-      user
-    };
+    // return {
+    //   ok: true,
+    //   user
+    // };
   },
 
   login: (parent, { email, password }, { User, SECRET, SECRET_2 }) =>
