@@ -14,7 +14,6 @@ const User = mongoose.model("User", {
     unique: true,
     required: [true, "Email is required"],
     validate: {
-      isAsync: true,
       validator: function(value) {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -24,7 +23,8 @@ const User = mongoose.model("User", {
     }
   },
   password: {
-    type: String
+    type: String,
+    required: [true, "Password required"]
   }
 });
 

@@ -14,7 +14,6 @@ import {
   Subtitle,
   Help
 } from "bloomer";
-
 import { Field, Label, Control, Input, Button, Notification } from "bloomer";
 
 export class SignUpPage extends Component {
@@ -73,9 +72,6 @@ export class SignUpPage extends Component {
     return (
       <Mutation mutation={REGISTER_NEW_USER}>
         {(mutate, { data, loading, error }) => {
-          console.log("mutate error:", error);
-          console.log("ERRORS:", errors);
-          console.log("mutate data:", data);
           return (
             <form onSubmit={event => this.handleSubmit(event, mutate)}>
               {error && <Notification isColor="danger">{error}</Notification>}

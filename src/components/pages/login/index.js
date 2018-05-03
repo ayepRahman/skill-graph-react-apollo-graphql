@@ -22,16 +22,12 @@ export class LoginPage extends Component {
     super(props);
 
     this.state = {
-      name: "",
       email: "",
-      password: ""
+      password: "",
+      errors: {}
     };
 
     autoBind(this);
-  }
-
-  componentWillMount() {
-    this;
   }
 
   handleChange(event) {
@@ -64,7 +60,7 @@ export class LoginPage extends Component {
       });
 
       this.setState({
-        err
+        errors: err
       });
     }
 
@@ -72,7 +68,8 @@ export class LoginPage extends Component {
   };
 
   renderForm() {
-    const { email, password } = this.state;
+    const { email, password, errors } = this.state;
+    const { emailError, passwordError } = errors;
     const isDisabled = email && password;
 
     return (
@@ -85,6 +82,7 @@ export class LoginPage extends Component {
                 <Label isPulled="left">Email</Label>
                 <Control>
                   <Input
+                    className={!!emailError ? "input is-danger" : ""}
                     name="email"
                     type="email"
                     placeholder="Email"
@@ -93,12 +91,13 @@ export class LoginPage extends Component {
                     required
                   />
                 </Control>
-                <Help isColor="danger">This username is available</Help>
+                {!!emailError && <Help isColor="danger">{emailError}</Help>}
               </Field>
               <Field>
                 <Label isPulled="left">Password</Label>
                 <Control>
                   <Input
+                    className={!!passwordError ? "input is-danger" : ""}
                     name="password"
                     type="password"
                     placeholder="Password"
@@ -107,9 +106,10 @@ export class LoginPage extends Component {
                     required
                   />
                 </Control>
-                <Help isColor="danger">This username is available</Help>
+                {!!passwordError && (
+                  <Help isColor="danger">{passwordError}</Help>
+                )}
               </Field>
-
               <Field isGrouped>
                 <Control>
                   <Button
