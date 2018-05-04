@@ -32,20 +32,28 @@ export class SignUpPage extends Component {
     autoBind(this);
   }
 
+  scoreStrength() {
+    const { password } = this.state;
+
+    console.log("password", password);
+  }
+
   handleChange(event) {
-    if (event.target.name === "password") {
-      let scorePasswordStrength = scorePassword(event.target.value);
-
-      // console.log("PS", scorePasswordStrength);
-
-      this.setState({
-        scorePasswordStrength
-      });
-    }
+    console.log("EVENT value:", event.target.value);
 
     this.setState({
       [event.target.name]: event.target.value
     });
+
+    // if (event.target.name === "password") {
+    //   let scorePasswordStrength = scorePassword(event.target.value);
+
+    //   // console.log("PS", scorePasswordStrength);
+
+    //   this.setState({
+    //     scorePasswordStrength
+    //   });
+    // }
   }
 
   handleSubmit = async (event, mutate) => {
