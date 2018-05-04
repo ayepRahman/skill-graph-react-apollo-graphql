@@ -3,6 +3,7 @@ import autoBind from "react-autobind";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import { Link } from "react-router-dom";
+import { scorePassword } from "./scorePassword";
 
 import {
   Container,
@@ -24,13 +25,24 @@ export class SignUpPage extends Component {
       name: "",
       email: "",
       password: "",
-      errors: {}
+      errors: {},
+      scorePasswordStrength: ""
     };
 
     autoBind(this);
   }
 
   handleChange(event) {
+    if (event.target.name === "password") {
+      let scorePasswordStrength = scorePassword(event.target.value);
+
+      // console.log("PS", scorePasswordStrength);
+
+      this.setState({
+        scorePasswordStrength
+      });
+    }
+
     this.setState({
       [event.target.name]: event.target.value
     });
@@ -61,7 +73,7 @@ export class SignUpPage extends Component {
   };
 
   renderForm() {
-    const { name, email, password, errors } = this.state;
+    const { name, email, password, errors, scorePasswordStrength } = this.state;
     const { nameError, emailError, passwordError } = errors;
     const isDisabled = name && email && password;
 

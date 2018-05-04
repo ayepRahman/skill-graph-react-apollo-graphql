@@ -1,9 +1,19 @@
 import _ from "lodash";
 
 export const formatErrors = e => {
-  console.log("FORMATERRORS", e.errors);
+  let arrayErrors = [];
+
   if (e && e.name === "ValidationError") {
-    return e.errors.map(error => _.pick, ["path", "message"]);
+    for (let field in e.errors) {
+      const objError = e.errors[field];
+      const obj = _.pick(objError, ["path", "message"]);
+
+      arrayErrors.push(obj);
+
+      console.log("ARRAY", arrayErrors);
+    }
+    return arrayErrors;
   }
+
   return [{ path: "other", message: "something when wrong" }];
 };
