@@ -1,12 +1,3 @@
-function checkPassStrength(password) {
-  var score = scorePassword(password);
-  if (score > 80) return "strong";
-  if (score > 60) return "good";
-  if (score >= 30) return "weak";
-
-  return "";
-}
-
 export const scorePassword = password => {
   // console.log("Is password", password);
   let score = 0;
@@ -33,13 +24,31 @@ export const scorePassword = password => {
   }
   score += (variationCount - 1) * 10;
 
-  let parseScore = parseInt(score, 0);
+  let parseScore = parseInt(score);
 
-  console.log("parseScore", parseScore);
+  return parseScore;
+};
 
-  let checkedPasswordStregth = checkPassStrength(parseScore);
+export const checkPasswordStrength = password => {
+  var score = scorePassword(password);
+  if (score > 80) {
+    return {
+      score,
+      strength: "strong"
+    };
+  }
+  if (score > 60) {
+    return {
+      score,
+      strength: "good"
+    };
+  }
+  if (score >= 30) {
+    return {
+      score,
+      strength: "weak"
+    };
+  }
 
-  // console.log("in scorePassword fn:", checkedPasswordStregth);
-
-  return checkedPasswordStregth;
+  return "";
 };

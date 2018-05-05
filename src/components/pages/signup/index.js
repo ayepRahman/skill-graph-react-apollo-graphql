@@ -3,7 +3,7 @@ import autoBind from "react-autobind";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import { Link } from "react-router-dom";
-import { scorePassword } from "./scorePassword";
+import { checkPasswordStrength } from "./scorePassword";
 
 import {
   Container,
@@ -13,7 +13,8 @@ import {
   Box,
   Title,
   Subtitle,
-  Help
+  Help,
+  Progress
 } from "bloomer";
 import { Field, Label, Control, Input, Button, Notification } from "bloomer";
 
@@ -26,34 +27,35 @@ export class SignUpPage extends Component {
       email: "",
       password: "",
       errors: {},
-      scorePasswordStrength: ""
+      passwordStrength: {}
     };
 
     autoBind(this);
   }
 
-  scoreStrength() {
-    const { password } = this.state;
+  // componentDidUpdate() {
+  //   const { password } = this.state;
+  //   const passwordStrength = checkPasswordStrength(password);
 
-    console.log("password", password);
-  }
+  //   console.log("checkedPasswordStregth", passwordStrength);
+  //   this.setState({
+  //     passwordStrength
+  //   });
+  // }
 
   handleChange(event) {
-    console.log("EVENT value:", event.target.value);
+    if (event.target.name === "password") {
+      const passwordStrength = checkPasswordStrength(event.target.value);
 
+      console.log("passwordStrength", passwordStrength);
+
+      this.setState({
+        passwordStrength
+      });
+    }
     this.setState({
       [event.target.name]: event.target.value
     });
-
-    // if (event.target.name === "password") {
-    //   let scorePasswordStrength = scorePassword(event.target.value);
-
-    //   // console.log("PS", scorePasswordStrength);
-
-    //   this.setState({
-    //     scorePasswordStrength
-    //   });
-    // }
   }
 
   handleSubmit = async (event, mutate) => {
@@ -81,7 +83,7 @@ export class SignUpPage extends Component {
   };
 
   renderForm() {
-    const { name, email, password, errors, scorePasswordStrength } = this.state;
+    const { name, email, password, errors, passwordStrength } = this.state;
     const { nameError, emailError, passwordError } = errors;
     const isDisabled = name && email && password;
 
@@ -136,6 +138,23 @@ export class SignUpPage extends Component {
                 </Control>
                 {!!passwordError && (
                   <Help isColor="danger">{passwordError}</Help>
+                )}
+
+                {passwordStrength && (
+                  <Progress
+                    isSize="small"
+                    isColor={
+                      passwordStrength.strength === "weak"
+                        ? "danger"
+                        : passwordStrength.strength === "good"
+                          ? "warning"
+                          : passwordStrength.strength === "strong"
+                            ? "success"
+                            : ""
+                    }
+                    value={passwordStrength.score}
+                    max={100}
+                  />
                 )}
               </Field>
 
