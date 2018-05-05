@@ -1,13 +1,12 @@
 import mongoose from "mongoose";
-// import { validate } from "../../auth/validate";
 
 const User = mongoose.model("User", {
   name: {
     type: String,
     unique: true,
-    minlength: [5, "5 character minumum"],
-    maxlength: [20, "Username character can't exceed 20 character"],
-    required: [true, "Username required"]
+    required: [true, "Username required"],
+    minlength: [4, "4 character minumum"],
+    maxlength: [20, "Username character can't exceed 20 character"]
   },
   email: {
     type: String,
@@ -24,7 +23,7 @@ const User = mongoose.model("User", {
   },
   password: {
     type: String,
-    required: [true, "Password required"]
+    required: [true, "Password is required"]
   }
 });
 

@@ -26,28 +26,17 @@ export class SignUpPage extends Component {
       name: "",
       email: "",
       password: "",
-      errors: {},
+      errors: [],
       passwordStrength: {}
     };
 
     autoBind(this);
   }
 
-  // componentDidUpdate() {
-  //   const { password } = this.state;
-  //   const passwordStrength = checkPasswordStrength(password);
-
-  //   console.log("checkedPasswordStregth", passwordStrength);
-  //   this.setState({
-  //     passwordStrength
-  //   });
-  // }
-
   handleChange(event) {
+    // handling password strength if password
     if (event.target.name === "password") {
       const passwordStrength = checkPasswordStrength(event.target.value);
-
-      console.log("passwordStrength", passwordStrength);
 
       this.setState({
         passwordStrength
@@ -81,6 +70,45 @@ export class SignUpPage extends Component {
       });
     }
   };
+
+  progressPasswordBar(passwordStrength) {
+    return (
+      <div className="p-t-md">
+        <Progress
+          className=" is-marginless"
+          isSize="small"
+          isColor={
+            passwordStrength.strength === "weak"
+              ? "danger"
+              : passwordStrength.strength === "good"
+                ? "warning"
+                : passwordStrength.strength === "strong"
+                  ? "primary"
+                  : passwordStrength.strength === "very strong"
+                    ? "success"
+                    : ""
+          }
+          value={passwordStrength.score}
+          max={100}
+        />
+        <p
+          className={
+            passwordStrength.strength === "weak"
+              ? "has-text-danger"
+              : passwordStrength.strength === "good"
+                ? "has-text-warning"
+                : passwordStrength.strength === "strong"
+                  ? "has-text-primary"
+                  : passwordStrength.strength === "very strong"
+                    ? "has-text-success"
+                    : ""
+          }
+        >
+          {passwordStrength.strength}
+        </p>
+      </div>
+    );
+  }
 
   renderForm() {
     const { name, email, password, errors, passwordStrength } = this.state;
@@ -140,22 +168,7 @@ export class SignUpPage extends Component {
                   <Help isColor="danger">{passwordError}</Help>
                 )}
 
-                {passwordStrength && (
-                  <Progress
-                    isSize="small"
-                    isColor={
-                      passwordStrength.strength === "weak"
-                        ? "danger"
-                        : passwordStrength.strength === "good"
-                          ? "warning"
-                          : passwordStrength.strength === "strong"
-                            ? "success"
-                            : ""
-                    }
-                    value={passwordStrength.score}
-                    max={100}
-                  />
-                )}
+                {passwordStrength && this.progressPasswordBar(passwordStrength)}
               </Field>
 
               <Field isGrouped>

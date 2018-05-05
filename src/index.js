@@ -5,6 +5,7 @@ import { ApolloProvider } from "react-apollo";
 import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
 import { WebSocketLink } from "apollo-link-ws";
 import { split } from "apollo-link";
+import { ApolloLink, concat } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 
 /*
@@ -18,7 +19,6 @@ import { getMainDefinition } from "apollo-utilities";
 // import { typeDefs } from "schema/schema";
 
 import App from "./components/app/routes";
-
 import "bulma/css/bulma.css";
 import "styles/index.css";
 
@@ -30,6 +30,20 @@ import "styles/index.css";
 // Connecting Server
 const httpLink = new HttpLink({
   uri: `http://localhost:8000/graphql`
+});
+
+const authMiddleware = new ApolloLink((operation, forward) => {
+  // add the authorization to the headers
+  operation.setContext({
+    headers: {
+      authorization: {
+        "x-token": localStorage.getItem("token") || null,
+        "x-token-refresh": localStorage.getItem("refreshToken") || null
+      }
+    }
+  });
+
+  return forward(operation);
 });
 
 // Connecting to WebSocket
@@ -54,7 +68,7 @@ const link = split(
 const apolloCache = new InMemoryCache(window.__APOLLO_STATE__);
 
 const client = new ApolloClient({
-  link: link,
+  link: concat(authMiddleware, link),
   cache: apolloCache
 });
 

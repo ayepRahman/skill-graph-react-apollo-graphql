@@ -34,16 +34,22 @@ export const checkPasswordStrength = password => {
   if (score > 80) {
     return {
       score,
+      strength: "very strong"
+    };
+  }
+  if (score > 50) {
+    return {
+      score,
       strength: "strong"
     };
   }
-  if (score > 60) {
+  if (score > 30) {
     return {
       score,
       strength: "good"
     };
   }
-  if (score >= 30) {
+  if (score >= 1) {
     return {
       score,
       strength: "weak"
