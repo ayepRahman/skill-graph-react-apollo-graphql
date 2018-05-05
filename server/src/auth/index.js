@@ -28,6 +28,60 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
   return [createToken, createRefreshToken];
 };
 
+export const refreshTokens = async (
+  token,
+  refreshToken,
+  User,
+  SECRET,
+  SECRET_2
+) => {
+  let userId = 0;
+
+  try {
+    const {
+      user: { id }
+    } = jwt.decode(refreshToken);
+
+    console.log("jwt.decode id:", id);
+  } catch (error) {
+    return {};
+  }
+
+  if (!userId) {
+    return {};
+  }
+
+  const user = await User.findById(userId, { lean: true });
+
+  console.log("User:", user);
+
+  if (!user) {
+    return {};
+  }
+
+  const refreshTokenSecret = user.password + SECRET_2;
+
+  console.log("refreshTokenSecret", refreshTokenSecret);
+
+  try {
+    jwt.verify(refreshToken, refreshTokenSecret);
+  } catch (error) {
+    return {};
+  }
+
+  const [newToken, newRefreshToken] = await createTokens(
+    user,
+    SECRET,
+    refreshTokenSecret
+  );
+
+  return {
+    token: newToken,
+    refreshToken: newRefreshToken,
+    user
+  };
+};
+
 export const tryLogin = async (email, password, User, SECRET, SECRET_2) => {
   let user = await User.find({ email: email });
   user = user[0];

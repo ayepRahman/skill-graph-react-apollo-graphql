@@ -2,13 +2,14 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import { graphqlExpress, graphiqlExpress } from "graphql-server-express";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
-import jwt from "jsonwebtoken";
 import { schema } from "./src/features/rootSchema";
 import User from "./src/features/users/model";
+import { refreshTokens } from "./src/auth";
 
 // for using .env files
 require("dotenv").config();
@@ -21,16 +22,29 @@ const SECRET_2 = process.env.SECRET_2 || "s3cr3t2";
 const server = express();
 const ws = createServer(server);
 
-// const addUser = async req => {
-//   const token = req.headers.authorization;
-//   try {
-//     const { user } = await jwt.verify(token, SECRET);
-//     req.user = user;
-//   } catch (error) {
-//     console.log(error);
-//   }
-//   req.next();
-// };
+const addUser = async (req, res, next) => {
+  const token = req.headers.authorization["x-token"];
+
+  if (token) {
+    try {
+      const { user } = jwt.verify(token, SECRET);
+      req.user = user;
+    } catch (error) {
+      const refreshToken = req.headers.authorization["x-refresh-token"];
+      const newTokens = await refreshTokens(token, refreshToken, User, SECRET);
+
+      if (newTokens.token && newTokens.refreshToken) {
+        res.set("Access-Control-Expose-Headers", "x-token", "x-refresh-token");
+        res.set("x-token", newTokens.token);
+        res.set("x-refresh-token", newTokens.refreshToken);
+      }
+
+      req.user = newTokens.user;
+    }
+  }
+
+  next();
+};
 
 // mongoose.connect(`mongodb://localhost/test`);
 mongoose.connect(`mongodb://localhost:27017`, function(err) {
@@ -57,7 +71,8 @@ mongoose.connect(`mongodb://localhost:27017`, function(err) {
 
 // connecting server to client
 server.use("*", cors({ origin: `http://localhost:${CLIENT_PORT}` }));
-// server.use(addUser);
+server.use(addUser);
+
 server.use(
   "/graphql",
   bodyParser.json(),
