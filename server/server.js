@@ -23,14 +23,17 @@ const server = express();
 const ws = createServer(server);
 
 const addUser = async (req, res, next) => {
-  const token = req.headers.authorization["x-token"];
+  const token = req.headers["x-token"];
+
+  console.log(`TOKEN: ${token}`);
 
   if (token) {
     try {
-      const { user } = jwt.verify(token, SECRET);
+      const { user } = await jwt.verify(token, SECRET);
       req.user = user;
+      console.log(`VERIFIED USER: ${req.user}`);
     } catch (error) {
-      const refreshToken = req.headers.authorization["x-refresh-token"];
+      const refreshToken = req.headers["x-refresh-token"];
       const newTokens = await refreshTokens(token, refreshToken, User, SECRET);
 
       if (newTokens.token && newTokens.refreshToken) {
@@ -40,6 +43,7 @@ const addUser = async (req, res, next) => {
       }
 
       req.user = newTokens.user;
+      console.log(`NEWTOKEN USER: ${req.user}`);
     }
   }
 
@@ -72,7 +76,6 @@ mongoose.connect(`mongodb://localhost:27017`, function(err) {
 // connecting server to client
 server.use("*", cors({ origin: `http://localhost:${CLIENT_PORT}` }));
 server.use(addUser);
-
 server.use(
   "/graphql",
   bodyParser.json(),

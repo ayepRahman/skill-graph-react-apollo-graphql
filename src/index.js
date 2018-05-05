@@ -32,27 +32,55 @@ const httpLink = new HttpLink({
   uri: `http://localhost:8000/graphql`
 });
 
-const authMiddleware = new ApolloLink((operation, forward) => {
+const middlewareLink = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
   operation.setContext({
     headers: {
-      authorization: {
-        "x-token": localStorage.getItem("token") || null,
-        "x-refresh-token": localStorage.getItem("refreshToken") || null
-      }
+      "x-token": localStorage.getItem("token") || null,
+      "x-refresh-token": localStorage.getItem("refreshToken") || null
     }
   });
 
   return forward(operation);
 });
 
+const afterwareLink = new ApolloLink((operation, forward) => {
+  return forward(operation).map(response => {
+    const {
+      response: { headers }
+    } = operation.getContext();
+    if (headers) {
+      const token = headers.get("x-token");
+      const refreshToken = headers.get("x-refresh-token");
+
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+
+      if (refreshToken) {
+        localStorage.setItem("refreshToken", refreshToken);
+      }
+    }
+
+    return response;
+  });
+});
+
 // Connecting to WebSocket
 const wsLink = new WebSocketLink({
   uri: `ws://localhost:8000/subscriptions`,
   options: {
-    reconnect: true
+    reconnect: true,
+    connectionParams: {
+      token: localStorage.getItem("token"),
+      refreshToken: localStorage.getItem("refreshToken")
+    }
   }
 });
+
+const httpLinkWithMiddleware = afterwareLink.concat(
+  middlewareLink.concat(httpLink)
+);
 
 // Split Link to depending on the operationis being sent
 const link = split(
@@ -62,13 +90,13 @@ const link = split(
     return kind === "OperationDefinition" && operation === "subscription";
   },
   wsLink,
-  httpLink
+  httpLinkWithMiddleware
 );
 
 const apolloCache = new InMemoryCache(window.__APOLLO_STATE__);
 
 const client = new ApolloClient({
-  link: concat(authMiddleware, link),
+  link,
   cache: apolloCache
 });
 
