@@ -14,8 +14,8 @@ import { refreshTokens } from "./src/auth";
 // for using .env files
 require("dotenv").config();
 
-const CLIENT_PORT = process.env.CLIENT_PORT || 9000;
-const SERVER_PORT = process.env.SERVER_PORT || 8000;
+const CLIENT_PORT = process.env.REACT_APP_CLIENT_PORT || 9000;
+const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || 8000;
 const SECRET = process.env.SECRET || "s3cr3t";
 const SECRET_2 = process.env.SECRET_2 || "s3cr3t2";
 

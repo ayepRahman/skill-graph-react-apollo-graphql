@@ -8,28 +8,14 @@ import { split } from "apollo-link";
 import { ApolloLink, concat } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 
-/*
-  # Adding MockUp Network Interface for testing
-  # import { mockNetworkInterfaceWithSchema } from 'apollo-test-utils'
-  # apollo-test-utils depreciated since apollo client 2.0 using apollo-link-schema instead
-*/
-
-// import { makeExecutableSchema, addMockFunctionsToSchema } from "graphql-tools";
-// import { SchemaLink } from "apollo-link-schema";
-// import { typeDefs } from "schema/schema";
-
 import App from "./components/app/routes";
 import "bulma/css/bulma.css";
 import "styles/index.css";
 
-// this for setting up mockup data
-// const schema = makeExecutableSchema({ typeDefs });
-// addMockFunctionsToSchema({ schema });
-// const mockSchemaLink = new SchemaLink({ schema });
-
 // Connecting Server
+const grapQlApi = process.env.REACT_APP_SERVER_GRAPHQL_ENDPOINT;
 const httpLink = new HttpLink({
-  uri: `http://localhost:8000/graphql`
+  uri: grapQlApi
 });
 
 const middlewareLink = new ApolloLink((operation, forward) => {
@@ -78,6 +64,7 @@ const wsLink = new WebSocketLink({
   }
 });
 
+// Linking httpLink, middlewareLink and afterwareLink
 const httpLinkWithMiddleware = afterwareLink.concat(
   middlewareLink.concat(httpLink)
 );
@@ -100,7 +87,6 @@ const client = new ApolloClient({
   cache: apolloCache
 });
 
-// const grapQlApi = process.env.REACT_APP_GRAPHQL_ENDPOINT;
 // const httpLink = new HttpLink({
 //   uri: `https://api.graph.cool/simple/v1/${grapQlApi}`,
 // });
