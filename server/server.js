@@ -30,10 +30,9 @@ const addUser = async (req, res, next) => {
 
   if (token) {
     try {
-      const valid = jwt.verify(token, SECRET);
-
+      const decoded = jwt.verify(token, SECRET);
       // req.user = user;
-      console.log(`VALID: ${valid}`);
+      console.log(`VERIFIED USER: ${decoded}`);
     } catch (error) {
       const refreshToken = req.headers["x-refresh-token"];
       console.log(`REFRESH_TOKEN: ${refreshToken}`);
