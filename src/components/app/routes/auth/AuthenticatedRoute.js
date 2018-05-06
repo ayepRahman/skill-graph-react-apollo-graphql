@@ -1,22 +1,28 @@
-import React from "react";
-import { Route, Redirect } from "react-router-dom";
+// import React, { Component } from "react";
+// import { Route, Redirect } from "react-router-dom";
 
-const AuthenticatedRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      localStorage.getItem("token") ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: "/sign_in",
-            state: { from: props.location }
-          }}
-        />
-      )
-    }
-  />
-);
+// export class AuthenticatedRoute extends Component {
+//   render() {
+//     const { component: WrapComponent, rest } = this.props;
 
-export default AuthenticatedRoute;
+//     return (
+//       <Route
+//         {...rest}
+//         render={props =>
+//           localStorage.getItem("token") ? (
+//             <WrapComponent {...props} />
+//           ) : (
+//             <Redirect
+//               to={{
+//                 pathname: "/sign_in",
+//                 state: { from: props.location }
+//               }}
+//             />
+//           )
+//         }
+//       />
+//     );
+//   }
+// }
+
+// export default AuthenticatedRoute;
