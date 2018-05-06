@@ -29,12 +29,14 @@ const addUser = async (req, res, next) => {
 
   if (token) {
     try {
-      const { user } = await jwt.verify(token, SECRET);
+      const { user } = Fjwt.verify(token, SECRET);
       req.user = user;
       console.log(`VERIFIED USER: ${req.user}`);
     } catch (error) {
       const refreshToken = req.headers["x-refresh-token"];
       const newTokens = await refreshTokens(token, refreshToken, User, SECRET);
+
+      console.log(`newToken: ${newTokens}`);
 
       if (newTokens.token && newTokens.refreshToken) {
         res.set("Access-Control-Expose-Headers", "x-token", "x-refresh-token");

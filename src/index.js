@@ -39,6 +39,9 @@ const afterwareLink = new ApolloLink((operation, forward) => {
       const token = headers.get("x-token");
       const refreshToken = headers.get("x-refresh-token");
 
+      console.log(`afterwareLink token: ${token}`);
+      console.log(`afterwareLink refreshToken: ${refreshToken}`);
+
       if (token) {
         localStorage.setItem("token", token);
       }
@@ -47,6 +50,8 @@ const afterwareLink = new ApolloLink((operation, forward) => {
         localStorage.setItem("refreshToken", refreshToken);
       }
     }
+
+    console.log(`afterwareLink response: ${response}`);
 
     return response;
   });
@@ -73,7 +78,6 @@ const httpLinkWithMiddleware = afterwareLink.concat(
 const link = split(
   ({ query }) => {
     const { kind, operation } = getMainDefinition(query);
-
     return kind === "OperationDefinition" && operation === "subscription";
   },
   wsLink,
@@ -86,10 +90,6 @@ const client = new ApolloClient({
   link,
   cache: apolloCache
 });
-
-// const httpLink = new HttpLink({
-//   uri: `https://api.graph.cool/simple/v1/${grapQlApi}`,
-// });
 
 ReactDOM.render(
   <BrowserRouter>
