@@ -8,8 +8,10 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
 import { schema } from "./src/features/rootSchema";
-import User from "./src/features/users/model";
 import { refreshTokens } from "./src/auth";
+
+// Models
+import User from "./src/features/users/model";
 
 // for using .env files
 require("dotenv").config();
@@ -24,19 +26,32 @@ const ws = createServer(server);
 
 const addUser = async (req, res, next) => {
   const token = req.headers["x-token"];
-
   console.log(`TOKEN: ${token}`);
 
   if (token) {
     try {
-      const { user } = Fjwt.verify(token, SECRET);
-      req.user = user;
-      console.log(`VERIFIED USER: ${req.user}`);
+      const valid = jwt.verify(token, SECRET);
+
+      // req.user = user;
+      console.log(`VALID: ${valid}`);
     } catch (error) {
       const refreshToken = req.headers["x-refresh-token"];
-      const newTokens = await refreshTokens(token, refreshToken, User, SECRET);
+      console.log(`REFRESH_TOKEN: ${refreshToken}`);
 
-      console.log(`newToken: ${newTokens}`);
+      const newTokens = await refreshTokens(
+        token,
+        refreshToken,
+        User,
+        SECRET,
+        SECRET_2
+      );
+
+      console.log(
+        `
+          "newTokens - x-token": ${newTokens.token}, 
+          "newTOkens - x-refresh-token: ${newTokens.refreshToken}
+        `
+      );
 
       if (newTokens.token && newTokens.refreshToken) {
         res.set("Access-Control-Expose-Headers", "x-token", "x-refresh-token");
@@ -45,7 +60,6 @@ const addUser = async (req, res, next) => {
       }
 
       req.user = newTokens.user;
-      console.log(`NEWTOKEN USER: ${req.user}`);
     }
   }
 

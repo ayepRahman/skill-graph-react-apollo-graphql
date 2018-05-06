@@ -23,7 +23,8 @@ const middlewareLink = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
       "x-token": localStorage.getItem("token") || null,
-      "x-refresh-token": localStorage.getItem("refreshToken") || null
+      "x-refresh-token": localStorage.getItem("refreshToken") || null,
+      test: "TEST"
     }
   });
 
@@ -39,6 +40,7 @@ const afterwareLink = new ApolloLink((operation, forward) => {
       const token = headers.get("x-token");
       const refreshToken = headers.get("x-refresh-token");
 
+      console.log(`afterwareLink headers: ${headers}`);
       console.log(`afterwareLink token: ${token}`);
       console.log(`afterwareLink refreshToken: ${refreshToken}`);
 

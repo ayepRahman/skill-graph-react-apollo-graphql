@@ -39,10 +39,10 @@ export const refreshTokens = async (
 
   try {
     const {
-      user: { id }
+      user: { _id }
     } = jwt.decode(refreshToken);
 
-    console.log("jwt.decode id:", id);
+    userId = _id;
   } catch (error) {
     return {};
   }
@@ -51,17 +51,13 @@ export const refreshTokens = async (
     return {};
   }
 
-  const user = await User.findById(userId, { lean: true });
-
-  console.log("User:", user);
+  const user = await User.findById(userId);
 
   if (!user) {
     return {};
   }
 
   const refreshTokenSecret = user.password + SECRET_2;
-
-  console.log("refreshTokenSecret", refreshTokenSecret);
 
   try {
     jwt.verify(refreshToken, refreshTokenSecret);
