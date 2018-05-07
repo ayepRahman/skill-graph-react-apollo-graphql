@@ -27,6 +27,7 @@
     "merge-graphql-schemas": "^1.5.1",
     "mongodb": "^3.0.7",
     "mongoose": "^5.0.15",
+    "path": "^0.12.7",
     "subscriptions-transport-ws": "^0.9.8"
   },
   "devDependencies": {

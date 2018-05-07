@@ -51,8 +51,7 @@ export class LoginPage extends Component {
       localStorage.setItem("token", token);
       localStorage.setItem("refreshToken", refreshToken);
 
-      // TODO: push to skill profile page once succesfull
-      // this.props.history.push("/");
+      this.props.history.push("/home");
     } else {
       const err = {};
       errors.forEach(({ path, message }) => {

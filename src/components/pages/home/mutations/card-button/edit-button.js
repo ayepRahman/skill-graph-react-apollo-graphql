@@ -17,9 +17,9 @@ import {
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
-import { ALL_USERS_QUERY } from "components/features/users/queries/user-skill-graph";
+import { ALL_USERS_QUERY } from "components/pages/home/queries/user-skill-graph";
 
-export class DeleteUserButton extends Component {
+export class UpdateUserButton extends Component {
   constructor(props) {
     super(props);
 
@@ -31,6 +31,16 @@ export class DeleteUserButton extends Component {
     };
 
     autoBind(this);
+  }
+
+  componentDidMount() {
+    const {
+      entry: { name }
+    } = this.props;
+
+    this.setState({
+      name
+    });
   }
 
   toggleModal() {
@@ -51,17 +61,16 @@ export class DeleteUserButton extends Component {
 
     await mutate({
       variables: { id, name },
-      update: (cache, { data: { deleteUser } }) => {
+      update: (cache, { data: { updateUser } }) => {
         const { users } = cache.readQuery({
           query: ALL_USERS_QUERY
         });
 
-        debugger;
         for (var i in users) {
-          let obj = users[i];
+          if (users[i].id === updateUser.id) {
+            users[i].name = updateUser.name;
 
-          if (obj.id === deleteUser.id) {
-            users.splice(users.indexOf(obj), 1);
+            return users;
           }
         }
 
@@ -83,29 +92,56 @@ export class DeleteUserButton extends Component {
     });
   };
 
+  renderForm() {
+    const { entry } = this.props;
+    const { id } = entry;
+
+    return (
+      <Mutation mutation={UPDATE_USER}>
+        {mutate => (
+          <div>
+            <form onSubmit={event => this.handleSubmit(event, { mutate, id })}>
+              <Field>
+                <Label isPulled="left">Name</Label>
+                <Control>
+                  <Input
+                    name="name"
+                    type="text"
+                    placeholder="Username"
+                    value={this.state.name}
+                    onChange={this.handleChange}
+                    required
+                  />
+                </Control>
+              </Field>
+            </form>
+          </div>
+        )}
+      </Mutation>
+    );
+  }
+
   renderModal(entry) {
-    const { id, name } = entry;
+    const { id } = entry;
 
     return (
       <Modal isActive={this.state.isOpen}>
         <ModalBackground />
-        <Mutation mutation={DELETE_USER}>
+        <Mutation mutation={UPDATE_USER}>
           {mutate => (
             <ModalCard>
               <ModalCardHeader>
-                <ModalCardTitle>Delete User</ModalCardTitle>
+                <ModalCardTitle>Update User</ModalCardTitle>
                 <Delete onClick={this.toggleModal} />
               </ModalCardHeader>
-              <ModalCardBody>
-                {`Hey ${name}, you sure you wanna delete?`}
-              </ModalCardBody>
+              <ModalCardBody>{this.renderForm()}</ModalCardBody>
               <ModalCardFooter>
                 <Button
                   onClick={event => this.handleSubmit(event, { mutate, id })}
                   isColor="primary"
                   isOutlined
                 >
-                  Confirm
+                  Save
                 </Button>
                 <Button onClick={this.toggleModal} isColor="danger" isOutlined>
                   Cancel
@@ -126,9 +162,9 @@ export class DeleteUserButton extends Component {
         <CardFooterItem
           style={{ cursor: "pointer" }}
           onClick={this.toggleModal}
-          className="has-text-danger"
+          className="has-text-link"
         >
-          Delete
+          Edit
         </CardFooterItem>
         {this.renderModal(entry)}
       </div>
@@ -136,13 +172,13 @@ export class DeleteUserButton extends Component {
   }
 }
 
-export const DELETE_USER = gql`
-  mutation deleteUser($id: ID!) {
-    deleteUser(id: $id) {
+export const UPDATE_USER = gql`
+  mutation updateUser($id: ID!, $name: String) {
+    updateUser(id: $id, name: $name) {
       id
       name
     }
   }
 `;
 
-export default DeleteUserButton;
+export default UpdateUserButton;

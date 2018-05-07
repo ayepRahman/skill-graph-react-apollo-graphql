@@ -14,12 +14,12 @@ import {
   Delete,
   CardFooterItem
 } from "bloomer";
-import { Field, Control, Label, Input } from "bloomer";
+// import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
-import { ALL_USERS_QUERY } from "components/features/users/queries/user-skill-graph";
+import { ALL_USERS_QUERY } from "components/pages/home/queries/user-skill-graph";
 
-export class UpdateUserButton extends Component {
+export class DeleteUserButton extends Component {
   constructor(props) {
     super(props);
 
@@ -31,16 +31,6 @@ export class UpdateUserButton extends Component {
     };
 
     autoBind(this);
-  }
-
-  componentDidMount() {
-    const {
-      entry: { name }
-    } = this.props;
-
-    this.setState({
-      name
-    });
   }
 
   toggleModal() {
@@ -61,16 +51,17 @@ export class UpdateUserButton extends Component {
 
     await mutate({
       variables: { id, name },
-      update: (cache, { data: { updateUser } }) => {
+      update: (cache, { data: { deleteUser } }) => {
         const { users } = cache.readQuery({
           query: ALL_USERS_QUERY
         });
 
+        debugger;
         for (var i in users) {
-          if (users[i].id === updateUser.id) {
-            users[i].name = updateUser.name;
+          let obj = users[i];
 
-            return users;
+          if (obj.id === deleteUser.id) {
+            users.splice(users.indexOf(obj), 1);
           }
         }
 
@@ -92,56 +83,29 @@ export class UpdateUserButton extends Component {
     });
   };
 
-  renderForm() {
-    const { entry } = this.props;
-    const { id } = entry;
-
-    return (
-      <Mutation mutation={UPDATE_USER}>
-        {mutate => (
-          <div>
-            <form onSubmit={event => this.handleSubmit(event, { mutate, id })}>
-              <Field>
-                <Label isPulled="left">Name</Label>
-                <Control>
-                  <Input
-                    name="name"
-                    type="text"
-                    placeholder="Username"
-                    value={this.state.name}
-                    onChange={this.handleChange}
-                    required
-                  />
-                </Control>
-              </Field>
-            </form>
-          </div>
-        )}
-      </Mutation>
-    );
-  }
-
   renderModal(entry) {
-    const { id } = entry;
+    const { id, name } = entry;
 
     return (
       <Modal isActive={this.state.isOpen}>
         <ModalBackground />
-        <Mutation mutation={UPDATE_USER}>
+        <Mutation mutation={DELETE_USER}>
           {mutate => (
             <ModalCard>
               <ModalCardHeader>
-                <ModalCardTitle>Update User</ModalCardTitle>
+                <ModalCardTitle>Delete User</ModalCardTitle>
                 <Delete onClick={this.toggleModal} />
               </ModalCardHeader>
-              <ModalCardBody>{this.renderForm()}</ModalCardBody>
+              <ModalCardBody>
+                {`Hey ${name}, you sure you wanna delete?`}
+              </ModalCardBody>
               <ModalCardFooter>
                 <Button
                   onClick={event => this.handleSubmit(event, { mutate, id })}
                   isColor="primary"
                   isOutlined
                 >
-                  Save
+                  Confirm
                 </Button>
                 <Button onClick={this.toggleModal} isColor="danger" isOutlined>
                   Cancel
@@ -162,9 +126,9 @@ export class UpdateUserButton extends Component {
         <CardFooterItem
           style={{ cursor: "pointer" }}
           onClick={this.toggleModal}
-          className="has-text-link"
+          className="has-text-danger"
         >
-          Edit
+          Delete
         </CardFooterItem>
         {this.renderModal(entry)}
       </div>
@@ -172,13 +136,13 @@ export class UpdateUserButton extends Component {
   }
 }
 
-export const UPDATE_USER = gql`
-  mutation updateUser($id: ID!, $name: String) {
-    updateUser(id: $id, name: $name) {
+export const DELETE_USER = gql`
+  mutation deleteUser($id: ID!) {
+    deleteUser(id: $id) {
       id
       name
     }
   }
 `;
 
-export default UpdateUserButton;
+export default DeleteUserButton;

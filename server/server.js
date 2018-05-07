@@ -9,9 +9,13 @@ import { createServer } from "http";
 import { execute, subscribe } from "graphql";
 import { schema } from "./src/features/rootSchema";
 import { refreshTokens } from "./src/auth";
+import path from "path";
 
 // Models
-import User from "./src/features/users/model";
+import { models } from "./src/features/rootModels";
+
+console.log(models);
+// import User from "./src/features/users/model";
 
 // for using .env files
 require("dotenv").config();
@@ -40,7 +44,7 @@ const addUser = async (req, res, next) => {
       const newTokens = await refreshTokens(
         token,
         refreshToken,
-        User,
+        models,
         SECRET,
         SECRET_2
       );
@@ -97,7 +101,7 @@ server.use(
   graphqlExpress(req => ({
     schema,
     context: {
-      User,
+      models,
       SECRET,
       SECRET_2,
       user: req.user
@@ -113,6 +117,11 @@ server.use(
     subscriptionsEndpoint: `ws://localhost:${SERVER_PORT}/subscriptions`
   })
 );
+
+// letting client handle not found route
+server.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./index.html"));
+});
 
 ws.listen(SERVER_PORT, error => {
   if (error) throw error;

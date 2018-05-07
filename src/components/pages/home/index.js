@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { Container, Columns, Column, Section, Title, Subtitle } from "bloomer";
-// import { Modal, ModalBackground, ModalCard, ModalCardBody, ModalCardFooter } from 'bloomer';
-// import { Button } from 'bloomer';
-// import autoBind from 'react-autobind';
 
-import SkillGraph from "components/features/users";
+import UsersSkillGraph from "./queries/user-skill-graph";
+import AddNewUser from "./mutations/add-user-skill";
 
 export class Home extends Component {
   render() {
@@ -31,7 +29,28 @@ export class Home extends Component {
             </Columns>
           </Container>
         </Section>
-        <SkillGraph />
+
+        {
+          //TODO: if user added their skill show their skill radar chart instead of the add skill button
+        }
+
+        <Section>
+          <Container>
+            <Columns isCentered>
+              <Column hasTextAlign="centered">
+                <AddNewUser />
+              </Column>
+            </Columns>
+          </Container>
+
+          <Container>
+            <Columns isCentered>
+              <Column hasTextAlign="centered">
+                <UsersSkillGraph />
+              </Column>
+            </Columns>
+          </Container>
+        </Section>
       </div>
     );
   }

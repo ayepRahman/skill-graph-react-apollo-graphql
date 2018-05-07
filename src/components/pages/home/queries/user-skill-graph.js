@@ -14,8 +14,8 @@ import {
   CardFooter
 } from "bloomer";
 
-import EditButton from "components/features/users/mutations/card-button/edit-button";
-import DeleteButton from "components/features/users/mutations/card-button/delete-button";
+import EditButton from "components/pages/home/mutations/card-button/edit-button";
+import DeleteButton from "components/pages/home/mutations/card-button/delete-button";
 
 export class UsersSkillGraph extends Component {
   constructor(props) {

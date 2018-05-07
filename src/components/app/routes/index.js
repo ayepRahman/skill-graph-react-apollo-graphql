@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import SignUpPage from "components/pages/signup";
 import LoginPage from "components/pages/login";
-// import Home from "components/pages/home";
+import Home from "components/pages/home";
+import NotFound from "components/pages/not-found";
 
-import CreatePage from "components/CreatePage";
-import DetailPage from "components/DetailPage";
+import AuthenticatedRoute from "components/app/routes/auth/AuthenticatedRoute";
 
 export class App extends Component {
   render() {
@@ -15,8 +15,8 @@ export class App extends Component {
         <Switch>
           <Route exact path="/" component={LoginPage} />
           <Route path="/signup" component={SignUpPage} />
-          <Route path="/create" component={CreatePage} />
-          <Route path="/post/:id" component={DetailPage} />
+          <AuthenticatedRoute path="/home" component={Home} />
+          <Route path="*" component={NotFound} />
         </Switch>
       </Router>
     );

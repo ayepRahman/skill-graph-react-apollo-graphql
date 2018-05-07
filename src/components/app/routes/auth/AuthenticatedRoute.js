@@ -1,5 +1,20 @@
 import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
+import decode from "jwt-decode";
+
+const isAuthenticated = () => {
+  const token = localStorage.getItem("token");
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  try {
+    decode(token);
+    decode(refreshToken);
+  } catch (error) {
+    return false;
+  }
+
+  return true;
+};
 
 export class AuthenticatedRoute extends Component {
   render() {
@@ -9,7 +24,7 @@ export class AuthenticatedRoute extends Component {
       <Route
         {...rest}
         render={props =>
-          localStorage.getItem("token") ? (
+          isAuthenticated() ? (
             <WrapComponent {...props} />
           ) : (
             <Redirect

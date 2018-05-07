@@ -3,7 +3,7 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import autoBind from "react-autobind";
 
-import { Container, Columns, Column, Section } from "bloomer";
+import { Container, Columns, Column } from "bloomer";
 import {
   Modal,
   ModalBackground,
@@ -17,7 +17,7 @@ import {
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
-import { ALL_USERS_QUERY } from "components/features/users/queries/user-skill-graph";
+import { ALL_USERS_QUERY } from "components/pages/home/queries/user-skill-graph";
 
 export class AddNewUser extends Component {
   constructor(props) {
