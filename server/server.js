@@ -9,13 +9,8 @@ import { createServer } from "http";
 import { execute, subscribe } from "graphql";
 import { schema } from "./src/features/rootSchema";
 import { refreshTokens } from "./src/auth";
-import path from "path";
-
-// Models
 import { models } from "./src/features/rootModels";
-
-console.log(models);
-// import User from "./src/features/users/model";
+import path from "path";
 
 // for using .env files
 require("dotenv").config();

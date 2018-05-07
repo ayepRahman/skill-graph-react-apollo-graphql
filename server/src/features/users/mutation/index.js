@@ -8,13 +8,17 @@ const pubsub = new PubSub();
 const saltRounds = 12;
 
 export default {
-  register: async (root, args, { User }) => {
+  register: async (root, args, { models }) => {
     let user = args;
+
+    console.log(models);
 
     try {
       user.password = await bcrypt.hash(user.password, saltRounds);
-      user = await new User(user).save();
+      user = await new models.User(user).save();
       user._id = user._id.toString();
+
+      console.log("user", user);
 
       // subscription
       pubsub.publish("userAdded", {
@@ -26,18 +30,20 @@ export default {
         user
       };
     } catch (errors) {
+      console.log(errors);
+
       return {
         ok: false,
-        errors: formatErrors(errors, User)
+        errors: formatErrors(errors, models.User)
       };
     }
   },
 
-  login: (parent, { email, password }, { User, SECRET, SECRET_2 }) =>
-    tryLogin(email, password, User, SECRET, SECRET_2),
+  login: (parent, { email, password }, { models, SECRET, SECRET_2 }) =>
+    tryLogin(email, password, models, SECRET, SECRET_2),
 
-  addUser: async (root, args, { User }) => {
-    const user = await new User(args).save();
+  addUser: async (root, args, { models }) => {
+    const user = await new models.User(args).save();
 
     if (!user) throw new Error("User does not exist");
 
@@ -52,8 +58,8 @@ export default {
     return user;
   },
 
-  updateUser: async (root, { id, name }, { User }) => {
-    const user = await User.findById(id);
+  updateUser: async (root, { id, name }, { models }) => {
+    const user = await models.User.findById(id);
 
     user.set({ name: name });
     user.save();
@@ -61,7 +67,7 @@ export default {
     return user;
   },
 
-  deleteUser: async (root, { id }, { User }) => {
-    return User.findByIdAndRemove(id);
+  deleteUser: async (root, { id }, { models }) => {
+    return models.User.findByIdAndRemove(id);
   }
 };

@@ -31,7 +31,7 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
 export const refreshTokens = async (
   token,
   refreshToken,
-  User,
+  models,
   SECRET,
   SECRET_2
 ) => {
@@ -51,7 +51,7 @@ export const refreshTokens = async (
     return {};
   }
 
-  const user = await User.findById(userId);
+  const user = await models.User.findById(userId);
 
   if (!user) {
     return {};
@@ -78,8 +78,8 @@ export const refreshTokens = async (
   };
 };
 
-export const tryLogin = async (email, password, User, SECRET, SECRET_2) => {
-  let user = await User.find({ email: email });
+export const tryLogin = async (email, password, models, SECRET, SECRET_2) => {
+  let user = await models.User.find({ email: email });
   user = user[0];
 
   if (!user) {
