@@ -6,6 +6,12 @@ const typeDefs = `
       id: ID!
       name: String!
       email: String!
+      skill: [Skill!]!
+    }
+
+    type Skill {
+      skillName: String!
+      skillLevel: Int!
     }
 
     type RegisterResponse {
@@ -38,6 +44,7 @@ const typeDefs = `
       deleteUser(id: ID!): User
       register(name: String!, email: String!, password: String! ): RegisterResponse!
       login(email: String!, password: String!): LoginResponse!
+      addUserSkills(skills: [Skill]): [Skills]
     }
 
     type Subscription {

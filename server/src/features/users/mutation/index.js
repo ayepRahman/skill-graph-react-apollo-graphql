@@ -69,5 +69,9 @@ export default {
 
   deleteUser: async (root, { id }, { models }) => {
     return models.User.findByIdAndRemove(id);
+  },
+
+  addUserSkills: async (root, args, { models, user }) => {
+    return [];
   }
 };
