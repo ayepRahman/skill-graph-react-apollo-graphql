@@ -11,14 +11,12 @@ export default {
   register: async (root, args, { models }) => {
     let user = args;
 
-    console.log(models);
-
     try {
       user.password = await bcrypt.hash(user.password, saltRounds);
       user = await new models.User(user).save();
       user._id = user._id.toString();
 
-      console.log("user", user);
+      console.log("register successfully", user);
 
       // subscription
       pubsub.publish("userAdded", {

@@ -1,8 +1,6 @@
 export default {
-  users: async (root, args, { User }) => {
-    const users = await User.find();
-
-    console.log("users", users);
+  users: async (root, args, { models }) => {
+    const users = await models.User.find();
 
     return users.map(user => {
       user._id = user._id.toString();
@@ -10,18 +8,17 @@ export default {
       return user;
     });
   },
-  userById: async (root, args, { User }) => {
-    const user = await User.findById(args.id);
+  userById: async (root, args, { models }) => {
+    const user = await models.User.findById(args.id);
 
     return user;
   },
-  me: async (root, args, { User, user }) => {
+  me: async (root, args, { models, user }) => {
     if (user) {
-      const users = await User.findById(user.id);
+      const users = await models.User.findById(user.id);
 
       console.log("Users", users);
 
-      debugger;
       return users;
     }
 

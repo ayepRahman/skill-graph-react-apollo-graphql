@@ -34,8 +34,6 @@ const addUser = async (req, res, next) => {
       console.log(`VERIFIED USER: ${decoded}`);
     } catch (error) {
       const refreshToken = req.headers["x-refresh-token"];
-      console.log(`REFRESH_TOKEN: ${refreshToken}`);
-
       const newTokens = await refreshTokens(
         token,
         refreshToken,
@@ -65,11 +63,11 @@ const addUser = async (req, res, next) => {
 };
 
 // mongoose.connect(`mongodb://localhost/test`);
-mongoose.connect(`mongodb://localhost:27017`, function(err) {
+mongoose.connect(`mongodb://localhost:27017/skill_graph_db`, function(err) {
   if (err) {
     console.log("Not Connected to MongoDB" + err);
   } else {
-    console.log("Connected to mongodb://localhost:27017");
+    console.log("Connected to mongodb://localhost:27017/skill_graph_db");
   }
 });
 
