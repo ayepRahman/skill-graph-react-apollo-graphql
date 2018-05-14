@@ -1,17 +1,20 @@
 import { makeExecutableSchema } from "graphql-tools";
 import { resolvers } from "./resolver";
 
+// TODO: maybe move typedDef base on features
+
 const typeDefs = `
     type User {
       id: ID!
       name: String!
       email: String!
-      skill: [Skill!]!
+      skills: [Skill] @relation(name: "UserSkills")
     }
 
     type Skill {
-      skillName: String!
-      skillLevel: Int!
+      skill_name: String!
+      skill_level: Int!
+      users: [User!]! @relation(name: "UserSkills")
     }
 
     type RegisterResponse {
@@ -44,7 +47,7 @@ const typeDefs = `
       deleteUser(id: ID!): User
       register(name: String!, email: String!, password: String! ): RegisterResponse!
       login(email: String!, password: String!): LoginResponse!
-      addUserSkills(skills: [Skill]): [Skills]
+      addOneUserSkill(id: ID!): User!
     }
 
     type Subscription {

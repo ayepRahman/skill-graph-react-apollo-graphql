@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+const Skill = new mongoose.Schema({
+  skill_name: {
+    type: String
+  },
+  skill_level: {
+    type: Number
+  }
+});
+
 const User = mongoose.model("User", {
   name: {
     type: String,
@@ -24,6 +33,9 @@ const User = mongoose.model("User", {
   password: {
     type: String,
     required: [true, "Password is required"]
+  },
+  skills: {
+    type: [Skill]
   }
 });
 

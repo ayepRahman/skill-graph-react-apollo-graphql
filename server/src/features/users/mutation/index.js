@@ -71,7 +71,15 @@ export default {
     return models.User.findByIdAndRemove(id);
   },
 
-  addUserSkills: async (root, args, { models, user }) => {
-    return [];
+  addOneUserSkill: async (root, { id, skill }, { models }) => {
+    // find user by id, add skill into user collection
+
+    const user = await models.User.findById(id);
+
+    return user;
   }
+
+  // addUserSkills: async (root, args, { models, user }) => {
+  //   return [];
+  // }
 };

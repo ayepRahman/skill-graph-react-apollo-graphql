@@ -2,6 +2,8 @@ export default {
   users: async (root, args, { User }) => {
     const users = await User.find();
 
+    console.log("users", users);
+
     return users.map(user => {
       user._id = user._id.toString();
 

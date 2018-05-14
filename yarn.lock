@@ -6737,6 +6737,12 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-adopt@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-adopt/-/react-adopt-0.4.1.tgz#22e8c086a64ca74e9828571e38c3635be4cc9cb9"
+  dependencies:
+    react "^16.3.2"
+
 react-apollo@2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.1.3.tgz#5eb02cdf18cc4bdeb615bda94baedb50354e94e5"

@@ -17,7 +17,7 @@ import {
 // import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
-import { ALL_USERS_QUERY } from "components/pages/home/queries/user-skill-graph";
+import { ALL_USERS_QUERY } from "components/pages/home/queries/user-skills";
 
 export class DeleteUserButton extends Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Container, Columns, Column, Section, Title, Subtitle } from "bloomer";
 
-import UsersSkillGraph from "./queries/user-skill-graph";
+import UsersSkillGraph from "./queries/user-skills";
 import AddNewUser from "./mutations/add-user-skill";
 
 export class Home extends Component {
