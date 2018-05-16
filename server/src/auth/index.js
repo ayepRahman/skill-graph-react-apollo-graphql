@@ -7,7 +7,7 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
   // decode: no secret | user me on the client side
   const createToken = jwt.sign(
     {
-      user: _.pick(user, ["_id"])
+      user: _.pick(user, ["_id", "name"])
     },
     SECRET,
     {
@@ -17,7 +17,7 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
 
   const createRefreshToken = jwt.sign(
     {
-      user: _.pick(user, ["_id"])
+      user: _.pick(user, ["_id", "name"])
     },
     SECRET_2,
     {

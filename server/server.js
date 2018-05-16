@@ -29,9 +29,9 @@ const addUser = async (req, res, next) => {
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, SECRET);
-      // req.user = user;
-      console.log(`VERIFIED USER: ${decoded}`);
+      const { user } = jwt.verify(token, SECRET);
+      req.user = JSON.stringify(user);
+      console.log(`VERIFIED USER: ${req.user}`);
     } catch (error) {
       const refreshToken = req.headers["x-refresh-token"];
       const newTokens = await refreshTokens(
@@ -42,18 +42,13 @@ const addUser = async (req, res, next) => {
         SECRET_2
       );
 
-      console.log(
-        `
-          "newTokens - x-token": ${newTokens.token}, 
-          "newTOkens - x-refresh-token: ${newTokens.refreshToken}
-        `
-      );
-
       if (newTokens.token && newTokens.refreshToken) {
         res.set("Access-Control-Expose-Headers", "x-token", "x-refresh-token");
         res.set("x-token", newTokens.token);
         res.set("x-refresh-token", newTokens.refreshToken);
       }
+
+      console.log(`newTokens User: ${newTokens.user}`);
 
       req.user = newTokens.user;
     }

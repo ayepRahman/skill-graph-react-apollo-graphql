@@ -69,15 +69,38 @@ export default {
     return models.User.findByIdAndRemove(id);
   },
 
-  addOneUserSkill: async (root, { id, skill }, { models }) => {
-    // find user by id, add skill into user collection
+  addUserSkill: async (root, { skillName, skillLevel }, { models, user }) => {
+    user = JSON.parse(user);
 
-    const user = await models.User.findById(id);
+    if (!user) throw new Error("User is not log in");
 
-    return user;
+    try {
+      const User = await models.User.findById(user._id);
+      User.set({ skills: { skillName, skillLevel } });
+      User.save();
+
+      console.log("AddUserSkill successfully", User.skills);
+
+      return User.skills;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+  addMultipleUserSkills: async (root, { skills }, { models, user }) => {
+    user = JSON.parse(user);
+
+    if (!user) throw new Error("User is not log in");
+
+    try {
+      const User = await models.User.findById(user._id);
+      // TODO: need to fix insertMany() is not a function
+      User.insertMany(skills);
+      User.save();
+
+      return User.skills;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
-
-  // addUserSkills: async (root, args, { models, user }) => {
-  //   return [];
-  // }
 };

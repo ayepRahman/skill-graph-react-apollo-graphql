@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Container, Columns, Column, Section, Title, Subtitle } from "bloomer";
 
 import UsersSkillGraph from "./queries/user-skills";
-import AddNewUser from "./mutations/add-user-skill";
+import AddUserSkill from "./mutations/add-user-skill";
 
 export class Home extends Component {
   render() {
@@ -38,7 +38,7 @@ export class Home extends Component {
           <Container>
             <Columns isCentered>
               <Column hasTextAlign="centered">
-                <AddNewUser />
+                <AddUserSkill />
               </Column>
             </Columns>
           </Container>

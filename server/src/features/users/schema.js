@@ -12,9 +12,15 @@ const typeDefs = `
     }
 
     type Skill {
-      skill_name: String!
-      skill_level: Int!
-      users: [User!]! @relation(name: "UserSkills")
+      skillName: String!
+      skillLevel: Int!
+      users: [User] @relation(name: "UserSkills")
+      errors: [Error!]
+    }
+
+    input SkillOption {
+      skillName: String!
+      skillLevel: Int!
     }
 
     type RegisterResponse {
@@ -47,7 +53,8 @@ const typeDefs = `
       deleteUser(id: ID!): User
       register(name: String!, email: String!, password: String! ): RegisterResponse!
       login(email: String!, password: String!): LoginResponse!
-      addOneUserSkill(id: ID!): User!
+      addUserSkill(skillName: String!, skillLevel: Int!): [Skill]
+      addMultipleUserSkills(skills: [SkillOption]): [Skill]
     }
 
     type Subscription {

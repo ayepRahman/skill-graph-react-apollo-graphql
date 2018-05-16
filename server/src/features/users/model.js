@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const Skill = new mongoose.Schema({
-  skill_name: {
+  skillName: {
     type: String
   },
-  skill_level: {
+  skillLevel: {
     type: Number
   }
 });

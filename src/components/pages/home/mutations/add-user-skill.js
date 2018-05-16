@@ -12,22 +12,23 @@ import {
   ModalCardTitle,
   ModalCardBody,
   ModalCardFooter,
-  Delete
+  Delete,
+  Select
 } from "bloomer";
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
 import { ALL_USERS_QUERY } from "components/pages/home/queries/user-skills";
 
-export class AddNewUser extends Component {
+export class AddUserSkill extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isOpen: false,
       name: "",
-      skill: "",
-      skill_level: ""
+      skillName: "",
+      skillLevel: 1
     };
 
     autoBind(this);
@@ -40,27 +41,30 @@ export class AddNewUser extends Component {
   }
 
   handleChange(event) {
+    console.log(event.target.value);
+
     this.setState({
       [event.target.name]: event.target.value
     });
   }
 
   handleSubmit = async (event, mutate) => {
-    const { name } = this.state;
+    const { skillName, skillLevel } = this.state;
     event.preventDefault();
 
     await mutate({
-      variables: { name },
-      update: (cache, { data: { addUser } }) => {
-        const { users } = cache.readQuery({
-          query: ALL_USERS_QUERY
-        });
+      variables: { skillName, skillLevel }
+      // TODO: add skill's to radarChart
+      // update: (cache, { data: { addUser } }) => {
+      //   const { users } = cache.readQuery({
+      //     query: ALL_USERS_QUERY
+      //   });
 
-        cache.writeQuery({
-          query: ALL_USERS_QUERY,
-          data: { users: users.concat([addUser]) }
-        });
-      }
+      //   cache.writeQuery({
+      //     query: ALL_USERS_QUERY,
+      //     data: { users: users.concat([addUser]) }
+      //   });
+      // }
       // optimisticResponse: {
       //   __typename: "Mutation",
       //   addUser: {
@@ -76,21 +80,35 @@ export class AddNewUser extends Component {
 
   renderForm() {
     return (
-      <Mutation mutation={ADD_NEW_USER}>
+      <Mutation mutation={ADD_USER_SKILL}>
         {addUser => (
           <div>
             <form onSubmit={event => this.handleSubmit(event, addUser)}>
               <Field>
-                <Label isPulled="left">Name</Label>
+                <Label isPulled="left">Skill</Label>
                 <Control>
                   <Input
-                    name="name"
+                    name="skillName"
                     type="text"
-                    placeholder="Username"
-                    value={this.state.name}
+                    placeholder="Skill Name"
+                    value={this.state.skillName}
                     onChange={this.handleChange}
                     required
                   />
+                </Control>
+              </Field>
+              <Field>
+                <Label>Expertise</Label>
+                <Control>
+                  <Select
+                    value={this.state.skillLevel}
+                    onChange={this.handleChange}
+                    name="skillLevel"
+                  >
+                    <option value={1}>Beginner</option>
+                    <option value={2}>Intermediate</option>
+                    <option value={3}>Expert</option>
+                  </Select>
                 </Control>
               </Field>
             </form>
@@ -105,7 +123,7 @@ export class AddNewUser extends Component {
       <Modal isActive={this.state.isOpen}>
         <ModalBackground />
 
-        <Mutation mutation={ADD_NEW_USER}>
+        <Mutation mutation={ADD_USER_SKILL}>
           {mutate => (
             <ModalCard>
               <ModalCardHeader>
@@ -152,13 +170,13 @@ export class AddNewUser extends Component {
   }
 }
 
-export const ADD_NEW_USER = gql`
-  mutation addUser($name: String!) {
-    addUser(name: $name) {
-      id
-      name
+export const ADD_USER_SKILL = gql`
+  mutation addUserSkill($skillName: String!, $skillLevel: Int!) {
+    addUserSkill(skillName: $skillName, skillLevel: $skillLevel) {
+      skillName
+      skillLevel
     }
   }
 `;
 
-export default AddNewUser;
+export default AddUserSkill;
