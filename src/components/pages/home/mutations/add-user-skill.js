@@ -13,7 +13,8 @@ import {
   ModalCardBody,
   ModalCardFooter,
   Delete,
-  Select
+  Select,
+  Icon
 } from "bloomer";
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
@@ -28,7 +29,8 @@ export class AddUserSkill extends Component {
       isOpen: false,
       name: "",
       skillName: "",
-      skillLevel: 1
+      skillLevel: 1,
+      skillSetsInputs: [{ skillName: "", skillLevel: 1 }]
     };
 
     autoBind(this);
@@ -40,80 +42,130 @@ export class AddUserSkill extends Component {
     });
   }
 
-  handleChange(event) {
-    console.log(event.target.value);
+  handleChange = index => event => {
+    console.log("handleChange", event.target.value, index);
+    const newSkillSetsInputs = this.state.skillSetsInputs.map(
+      (skillSetInput, sIndex) => {
+        if (index !== sIndex) return skillSetInput;
+        return { ...skillSetInput, [event.target.name]: event.target.value };
+      }
+    );
 
     this.setState({
-      [event.target.name]: event.target.value
+      skillSetsInputs: newSkillSetsInputs
     });
-  }
+  };
 
   handleSubmit = async (event, mutate) => {
-    const { skillName, skillLevel } = this.state;
+    const { skillSetsInputs } = this.state;
     event.preventDefault();
 
-    await mutate({
-      variables: { skillName, skillLevel }
-      // TODO: add skill's to radarChart
-      // update: (cache, { data: { addUser } }) => {
-      //   const { users } = cache.readQuery({
-      //     query: ALL_USERS_QUERY
-      //   });
+    console.log(skillSetsInputs);
 
-      //   cache.writeQuery({
-      //     query: ALL_USERS_QUERY,
-      //     data: { users: users.concat([addUser]) }
-      //   });
-      // }
-      // optimisticResponse: {
-      //   __typename: "Mutation",
-      //   addUser: {
-      //     __typename: ""
-      //   }
-      // }
+    // await mutate({
+    //   variables: { skillName, skillLevel }
+    //   // TODO: add skill's to radarChart
+    //   // update: (cache, { data: { addUser } }) => {
+    //   //   const { users } = cache.readQuery({
+    //   //     query: ALL_USERS_QUERY
+    //   //   });
+
+    //   //   cache.writeQuery({
+    //   //     query: ALL_USERS_QUERY,
+    //   //     data: { users: users.concat([addUser]) }
+    //   //   });
+    //   // }
+    //   // optimisticResponse: {
+    //   //   __typename: "Mutation",
+    //   //   addUser: {
+    //   //     __typename: ""
+    //   //   }
+    //   // }
+    // });
+
+    // this.setState({
+    //   isOpen: !this.state.isOpen
+    // });
+  };
+
+  onAddSkillSets = () => {
+    console.log("onAddSkillSets");
+    this.setState({
+      skillSetsInputs: this.state.skillSetsInputs.concat({
+        skillName: "",
+        skillLevel: 1
+      })
     });
+  };
+
+  onRemoveSkillSets = index => {
+    console.log("onRemoveSkillSets");
 
     this.setState({
-      isOpen: !this.state.isOpen
+      skillSetsInputs: this.state.skillSetsInputs.filter(
+        (skillSetInput, sIndex) => index !== sIndex
+      )
     });
   };
 
   renderForm() {
+    const { skillSetsInputs } = this.state;
+
     return (
       <Mutation mutation={ADD_USER_SKILL}>
-        {addUser => (
-          <div>
-            <form onSubmit={event => this.handleSubmit(event, addUser)}>
-              <Field>
-                <Label isPulled="left">Skill</Label>
-                <Control>
-                  <Input
-                    name="skillName"
-                    type="text"
-                    placeholder="Skill Name"
-                    value={this.state.skillName}
-                    onChange={this.handleChange}
-                    required
-                  />
-                </Control>
-              </Field>
-              <Field>
-                <Label>Expertise</Label>
-                <Control>
-                  <Select
-                    value={this.state.skillLevel}
-                    onChange={this.handleChange}
-                    name="skillLevel"
-                  >
-                    <option value={1}>Beginner</option>
-                    <option value={2}>Intermediate</option>
-                    <option value={3}>Expert</option>
-                  </Select>
-                </Control>
-              </Field>
-            </form>
-          </div>
-        )}
+        {addUser =>
+          skillSetsInputs.map((skillSetInput, index) => {
+            return (
+              <Container key={index}>
+                <form onSubmit={event => this.handleSubmit(event, addUser)}>
+                  <Columns isMultiline>
+                    <Column isSize={{ default: 6 }}>
+                      <Field>
+                        <Label isPulled="left">Skill</Label>
+                        <Control>
+                          <Input
+                            name="skillName"
+                            type="text"
+                            placeholder="Skill Name"
+                            value={skillSetInput.skillName}
+                            onChange={this.handleChange(index)}
+                            required
+                          />
+                        </Control>
+                      </Field>
+                    </Column>
+
+                    <Column isSize={{ default: 4 }}>
+                      <Field>
+                        <Label isPulled="left">Expertise</Label>
+                        <Control isDisplay="block">
+                          <Select
+                            isFullWidth
+                            value={skillSetInput.skillLevel}
+                            onChange={this.handleChange(index)}
+                            name="skillLevel"
+                          >
+                            <option value={1}>Beginner</option>
+                            <option value={2}>Intermediate</option>
+                            <option value={3}>Expert</option>
+                          </Select>
+                        </Control>
+                      </Field>
+                    </Column>
+
+                    <Column isPulled="right" isSize={{ default: 2 }}>
+                      <Icon
+                        isPulled="right"
+                        className="fas fa-minus-circle p-t-lg"
+                        onClick={() => this.onRemoveSkillSets(index)}
+                      />
+                    </Column>
+                  </Columns>
+                </form>
+              </Container>
+            );
+          })
+        }
       </Mutation>
     );
   }
@@ -130,7 +182,17 @@ export class AddUserSkill extends Component {
                 <ModalCardTitle>Add User Skill</ModalCardTitle>
                 <Delete onClick={this.toggleModal} />
               </ModalCardHeader>
-              <ModalCardBody>{this.renderForm()}</ModalCardBody>
+              <ModalCardBody>
+                <div className="p-b-xl">
+                  <Icon
+                    isPulled="right"
+                    className="fas fa-plus-circle"
+                    onClick={this.onAddSkillSets}
+                  />
+                </div>
+
+                {this.renderForm()}
+              </ModalCardBody>
               <ModalCardFooter>
                 <Button
                   onClick={event => this.handleSubmit(event, mutate)}
