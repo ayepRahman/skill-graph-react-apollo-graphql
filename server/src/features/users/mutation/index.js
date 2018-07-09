@@ -90,10 +90,14 @@ export default {
   addMultipleUserSkills: async (root, { skills }, { models, user }) => {
     user = JSON.parse(user);
 
+    console.log("addMultipleUserSkills User", user);
+
     if (!user) throw new Error("User is not log in");
 
     try {
       const User = await models.User.findById(user._id);
+      console.log("User", User);
+
       // TODO: need to fix insertMany() is not a function
       User.insertMany(skills);
       User.save();

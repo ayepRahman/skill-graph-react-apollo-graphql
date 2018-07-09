@@ -42,6 +42,8 @@ const addUser = async (req, res, next) => {
         SECRET_2
       );
 
+      console.log("newTokens", newTokens);
+
       if (newTokens.token && newTokens.refreshToken) {
         res.set("Access-Control-Expose-Headers", "x-token", "x-refresh-token");
         res.set("x-token", newTokens.token);

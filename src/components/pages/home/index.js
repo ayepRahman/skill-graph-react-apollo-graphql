@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Columns, Column, Section, Title, Subtitle } from "bloomer";
 
+import UserDetails from "./queries/user-details";
 import UsersSkillGraph from "./queries/user-skills";
 import AddUserSkill from "./mutations/add-user-skill";
 
@@ -24,6 +25,7 @@ export class Home extends Component {
                   <span aria-label="Rocket" role="img">
                     🚀
                   </span>
+                  <UserDetails />
                 </Subtitle>
               </Column>
             </Columns>
