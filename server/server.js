@@ -3,14 +3,14 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import path from "path";
 import { graphqlExpress, graphiqlExpress } from "graphql-server-express";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
 import { schema } from "./src/features/rootSchema";
-import { refreshTokens } from "./src/auth";
 import { models } from "./src/features/rootModels";
-import path from "path";
+import { refreshTokens } from "./src/auth";
 
 // for using .env files
 require("dotenv").config();
@@ -23,16 +23,19 @@ const SECRET_2 = process.env.SECRET_2 || "s3cr3t2";
 const server = express();
 const ws = createServer(server);
 
-const addUser = async (req, res, next) => {
+// get user from headers
+const getUserFromHeaders = async (req, res, next) => {
   const token = req.headers["x-token"];
   console.log(`TOKEN: ${token}`);
 
   if (token) {
     try {
+      // verify token with secret
       const { user } = jwt.verify(token, SECRET);
       req.user = JSON.stringify(user);
       console.log(`VERIFIED USER: ${req.user}`);
     } catch (error) {
+      console.log("getUserFromHeaders", error);
       const refreshToken = req.headers["x-refresh-token"];
       const newTokens = await refreshTokens(
         token,
@@ -84,7 +87,7 @@ mongoose.connect(`mongodb://localhost:27017/skill_graph_db`, function(err) {
 
 // connecting server to client
 server.use("*", cors({ origin: `http://localhost:${CLIENT_PORT}` }));
-server.use(addUser);
+server.use(getUserFromHeaders);
 server.use(
   "/graphql",
   bodyParser.json(),
@@ -94,7 +97,7 @@ server.use(
       models,
       SECRET,
       SECRET_2,
-      user: req.user
+      userFromHeader: req.user
     }
   }))
 );
@@ -115,8 +118,9 @@ server.get("*", (req, res) => {
 
 ws.listen(SERVER_PORT, error => {
   if (error) throw error;
+
   console.log(
-    `GraphQL Server is running on http://localhost:${SERVER_PORT}/graphiql`
+    `GraphQL Server is running on http://localhost:${SERVER_PORT}/graphql`
   );
 
   // Set up the WebSocket for handling GraphQL subscriptions

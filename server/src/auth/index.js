@@ -44,6 +44,7 @@ export const refreshTokens = async (
 
     userId = _id;
   } catch (error) {
+    console.log("refreshTokens", error);
     return {};
   }
 
@@ -62,6 +63,7 @@ export const refreshTokens = async (
   try {
     jwt.verify(refreshToken, refreshTokenSecret);
   } catch (error) {
+    console.log("refreshTokens", error);
     return {};
   }
 

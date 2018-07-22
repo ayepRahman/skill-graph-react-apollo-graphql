@@ -2,19 +2,32 @@ import { makeExecutableSchema } from "graphql-tools";
 import { resolvers } from "./resolver";
 
 // TODO: maybe move typedDef base on features
+// skillSets: [Skill] @relation(name: "UserSkillSets")
+// type User {
+//   id: ID!
+//   name: String!
+//   email: String!
+//   skillSets: [Skill] @relation(name: "UserSkillSets")
+// }
+
+// type Skill {
+//   skillName: String!
+//   skillLevel: Int!
+//   user: [User] @relation(name: "UserSkillSets")
+//   errors: [Error!]
+// }
 
 const typeDefs = `
     type User {
       id: ID!
       name: String!
       email: String!
-      skills: [Skill] @relation(name: "UserSkills")
+      skillSets: [Skill] 
     }
-
+    
     type Skill {
       skillName: String!
       skillLevel: Int!
-      users: [User] @relation(name: "UserSkills")
       errors: [Error!]
     }
 
@@ -54,7 +67,7 @@ const typeDefs = `
       register(name: String!, email: String!, password: String! ): RegisterResponse!
       login(email: String!, password: String!): LoginResponse!
       addUserSkill(skillName: String!, skillLevel: Int!): [Skill]
-      addMultipleUserSkills(skills: [SkillOption]): [Skill]
+      addUserSkillSets(skillSets: [SkillOption]): [Skill]
     }
 
     type Subscription {

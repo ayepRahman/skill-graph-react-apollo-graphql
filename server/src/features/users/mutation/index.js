@@ -87,24 +87,33 @@ export default {
     }
   },
 
-  addMultipleUserSkills: async (root, { skills }, { models, user }) => {
-    user = JSON.parse(user);
+  addUserSkillSets: async (root, args, { models, userFromHeader }) => {
+    console.log(args);
 
-    console.log("addMultipleUserSkills User", user);
+    return {
+      skillSets: [{ user: [] }]
+    };
 
-    if (!user) throw new Error("User is not log in");
+    // user = JSON.parse(user);
 
-    try {
-      const User = await models.User.findById(user._id);
-      console.log("User", User);
+    // console.log(`addUserSkillSets user`, user);
 
-      // TODO: need to fix insertMany() is not a function
-      User.insertMany(skills);
-      User.save();
+    // if (!user) throw new Error("User is not log in");
 
-      return User.skills;
-    } catch (error) {
-      throw new Error(error);
-    }
+    // try {
+    //   const User = await models.User.findById(user._id);
+    //   console.log("User", User);
+
+    //   // TODO: need to fix insertMany() is not a function
+    //   User.update({ skillSets: skillSets });
+    //   User.save();
+
+    //   console.log("userskillsets", User.skillSets);
+
+    //   return User.skillSets;
+    // } catch (error) {
+    //   console.log("addUserSkillSets", error);
+    //   throw new Error(error);
+    // }
   }
 };
