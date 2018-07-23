@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import { tryLogin } from "../../../auth";
 import { formatErrors } from "../../../auth/formatErrors";
+import { model } from "mongoose";
 
 const pubsub = new PubSub();
 const saltRounds = 12;
@@ -87,18 +88,38 @@ export default {
     }
   },
 
-  addUserSkillSets: async (root, args, { models, userFromHeader }) => {
-    console.log(args);
+  addUserSkillSets: async (
+    root,
+    { id, skillSets },
+    { models, userFromHeader }
+  ) => {
+    console.log(skillSets);
 
-    return {
-      skillSets: [{ user: [] }]
-    };
+    let User;
+
+    try {
+      if (!userFromHeader && id) {
+        User = await models.User.findById(id);
+        console.log("!userFromHeader_exist: FALSE", User);
+      } else if (userFromHeader) {
+        const parseUser = JSON.parse(userFromHeader);
+        User = await models.User.findById(parseUser._id);
+        console.log("userFromHeader_exist: TRUE", User);
+      }
+
+      User.update({ $set: { skillSets: skillSets } });
+      User.save();
+
+      console.log("User SkillSets:", User.skillSets);
+
+      return [{ skillName: "hi", skillLevel: 3 }];
+    } catch (error) {
+      throw new Error(error);
+    }
 
     // user = JSON.parse(user);
 
     // console.log(`addUserSkillSets user`, user);
-
-    // if (!user) throw new Error("User is not log in");
 
     // try {
     //   const User = await models.User.findById(user._id);

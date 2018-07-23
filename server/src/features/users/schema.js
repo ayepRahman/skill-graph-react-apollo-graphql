@@ -67,7 +67,7 @@ const typeDefs = `
       register(name: String!, email: String!, password: String! ): RegisterResponse!
       login(email: String!, password: String!): LoginResponse!
       addUserSkill(skillName: String!, skillLevel: Int!): [Skill]
-      addUserSkillSets(skillSets: [SkillOption]): [Skill]
+      addUserSkillSets(id: ID!  skillSets: [SkillOption]): [Skill]
     }
 
     type Subscription {
