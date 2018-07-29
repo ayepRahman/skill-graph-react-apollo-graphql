@@ -19,9 +19,9 @@ import {
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
 
-import { ALL_USERS_QUERY } from "components/pages/home/queries/user-skills";
+import { ALL_USERS_QUERY } from "../queries/user-skills";
 
-export class AddUserSkill extends Component {
+export class AddUserSkillSetsButton extends Component {
   constructor(props) {
     super(props);
 
@@ -35,6 +35,10 @@ export class AddUserSkill extends Component {
 
     autoBind(this);
   }
+
+  componentDidMount = () => {
+    // query the initial value of skillset if any and set to state
+  };
 
   toggleModal() {
     this.setState({
@@ -241,4 +245,4 @@ export const ADD_USER_SKILL = gql`
   }
 `;
 
-export default AddUserSkill;
+export default AddUserSkillSetsButton;

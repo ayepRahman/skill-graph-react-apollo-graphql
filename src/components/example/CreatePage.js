@@ -1,7 +1,7 @@
-import React from "react";
-import { withRouter } from "react-router-dom";
+import React from "../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react";
+import { withRouter } from "../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-router-dom";
 import { graphql } from "react-apollo";
-import Modal from "react-modal";
+import Modal from "../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-modal";
 // import modalStyle from '../constants/modalStyle';
 import gql from "graphql-tag";
 

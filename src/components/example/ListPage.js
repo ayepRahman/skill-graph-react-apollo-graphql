@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from "../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react";
+import { Link } from "../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-router-dom";
 import Post from "./Post";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";

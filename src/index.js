@@ -1,14 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import React from "../../../../Library/Caches/typescript/2.9/node_modules/@types/react";
+import ReactDOM from "../../../../Library/Caches/typescript/2.9/node_modules/@types/react-dom";
+import { BrowserRouter } from "../../../../Library/Caches/typescript/2.9/node_modules/@types/react-router-dom";
 import { ApolloProvider } from "react-apollo";
 import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
 import { WebSocketLink } from "apollo-link-ws";
-import { split } from "apollo-link";
-import { ApolloLink, concat } from "apollo-link";
+import { split } from "../server/node_modules/apollo-link";
+import { ApolloLink, concat } from "../server/node_modules/apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 
-import App from "./components/app/routes";
+import App from "components/app/routes";
 import "bulma/css/bulma.css";
 import "styles/index.css";
 

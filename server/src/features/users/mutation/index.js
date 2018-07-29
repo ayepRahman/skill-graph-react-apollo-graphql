@@ -1,9 +1,8 @@
 import { PubSub } from "graphql-subscriptions";
-import bcrypt from "bcrypt";
+import bcrypt from "../../../../../../../../Library/Caches/typescript/2.9/node_modules/@types/bcrypt";
 
 import { tryLogin } from "../../../auth";
 import { formatErrors } from "../../../auth/formatErrors";
-import { model } from "mongoose";
 
 const pubsub = new PubSub();
 const saltRounds = 12;
@@ -93,9 +92,9 @@ export default {
     { id, skillSets },
     { models, userFromHeader }
   ) => {
-    // console.log("skillSets from user", skillSets);
-
     let User;
+
+    console.log("ROOT", root);
 
     try {
       if (!userFromHeader && id) {
@@ -108,37 +107,13 @@ export default {
           { skillSets: skillSets }
         );
         User = await models.User.findById({ _id: parseUser._id });
-        console.log("userFromHeader_exist: TRUE", User);
       }
 
-      console.log("USER:", User);
       const userSkillSets = User.skillSets;
-
-      console.log("SKILLSETS", skillSets);
 
       return userSkillSets;
     } catch (error) {
       throw new Error(error);
     }
-
-    // user = JSON.parse(user);
-
-    // console.log(`addUserSkillSets user`, user);
-
-    // try {
-    //   const User = await models.User.findById(user._id);
-    //   console.log("User", User);
-
-    //   // TODO: need to fix insertMany() is not a function
-    //   User.update({ skillSets: skillSets });
-    //   User.save();
-
-    //   console.log("userskillsets", User.skillSets);
-
-    //   return User.skillSets;
-    // } catch (error) {
-    //   console.log("addUserSkillSets", error);
-    //   throw new Error(error);
-    // }
   }
 };

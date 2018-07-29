@@ -1,4 +1,4 @@
-import React from "react";
+import React from "../../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react";
 import { Radar } from "react-chartjs-2";
 
 const RadarChart = ({ ...props }) => {

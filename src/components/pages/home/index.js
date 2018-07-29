@@ -3,7 +3,7 @@ import { Container, Columns, Column, Section, Title, Subtitle } from "bloomer";
 
 import UserDetails from "./queries/user-details";
 import UsersSkillGraph from "./queries/user-skills";
-import AddUserSkill from "./mutations/add-user-skill";
+import AddUserSkillSetsButton from "./mutations/add-user-skill-sets-button";
 
 export class Home extends Component {
   render() {
@@ -25,7 +25,6 @@ export class Home extends Component {
                   <span aria-label="Rocket" role="img">
                     🚀
                   </span>
-                  <UserDetails />
                 </Subtitle>
               </Column>
             </Columns>
@@ -36,7 +35,7 @@ export class Home extends Component {
           //TODO: if user added their skill show their skill radar chart instead of the add skill button
         }
 
-        <Section>
+        {/*<Section>
           <Container>
             <Columns isCentered>
               <Column hasTextAlign="centered">
@@ -52,7 +51,7 @@ export class Home extends Component {
               </Column>
             </Columns>
           </Container>
-        </Section>
+        </Section>*/}
       </div>
     );
   }
