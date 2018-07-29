@@ -1,5 +1,5 @@
 import { PubSub } from "graphql-subscriptions";
-import bcrypt from "../../../../../../../../Library/Caches/typescript/2.9/node_modules/@types/bcrypt";
+import bcrypt from "bcrypt";
 
 import { tryLogin } from "../../../auth";
 import { formatErrors } from "../../../auth/formatErrors";

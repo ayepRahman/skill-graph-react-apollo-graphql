@@ -1,6 +1,6 @@
-import jwt from "../../../../../../Library/Caches/typescript/2.9/node_modules/@types/jsonwebtoken";
-import _ from "../../../../../../Library/Caches/typescript/2.9/node_modules/@types/lodash";
-import bcrypt from "../../../../../../Library/Caches/typescript/2.9/node_modules/@types/bcrypt";
+import jwt from "jsonwebtoken";
+import _ from "lodash";
+import bcrypt from "bcrypt";
 
 export const createTokens = async (user, SECRET, SECRET_2) => {
   // verify: need secret | user me for authentication

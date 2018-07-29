@@ -1,8 +1,8 @@
-import express from "../../../../Library/Caches/typescript/2.9/node_modules/@types/express";
-import bodyParser from "../../../../Library/Caches/typescript/2.9/node_modules/@types/body-parser";
-import cors from "../../../../Library/Caches/typescript/2.9/node_modules/@types/cors";
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
 import mongoose from "mongoose";
-import jwt from "../../../../Library/Caches/typescript/2.9/node_modules/@types/jsonwebtoken";
+import jwt from "jsonwebtoken";
 import path from "path";
 import { graphqlExpress, graphiqlExpress } from "graphql-server-express";
 import { SubscriptionServer } from "subscriptions-transport-ws";
@@ -13,7 +13,7 @@ import { models } from "./src/features/rootModels";
 import { refreshTokens } from "./src/auth";
 
 // for using .env files
-require("../../../../Library/Caches/typescript/2.9/node_modules/@types/dotenv").config();
+require("dotenv").config();
 
 const CLIENT_PORT = process.env.REACT_APP_CLIENT_PORT || 9000;
 const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || 8000;
