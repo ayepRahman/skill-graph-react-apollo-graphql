@@ -28,7 +28,6 @@ const typeDefs = `
     type Skill {
       skillName: String!
       skillLevel: Int!
-      errors: [Error!]
     }
 
     input SkillOption {

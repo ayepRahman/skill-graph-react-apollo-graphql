@@ -93,26 +93,30 @@ export default {
     { id, skillSets },
     { models, userFromHeader }
   ) => {
-    console.log(skillSets);
+    // console.log("skillSets from user", skillSets);
 
     let User;
 
     try {
       if (!userFromHeader && id) {
-        User = await models.User.findById(id);
-        console.log("!userFromHeader_exist: FALSE", User);
+        await models.User.update({ _id: id }, { skillSets: skillSets });
+        User = await models.User.findById({ _id: id });
       } else if (userFromHeader) {
         const parseUser = JSON.parse(userFromHeader);
-        User = await models.User.findById(parseUser._id);
+        await models.User.update(
+          { id: parseUser._id },
+          { skillSets: skillSets }
+        );
+        User = await models.User.findById({ _id: parseUser._id });
         console.log("userFromHeader_exist: TRUE", User);
       }
 
-      User.update({ $set: { skillSets: skillSets } });
-      User.save();
+      console.log("USER:", User);
+      const userSkillSets = User.skillSets;
 
-      console.log("User SkillSets:", User.skillSets);
+      console.log("SKILLSETS", skillSets);
 
-      return [{ skillName: "hi", skillLevel: 3 }];
+      return userSkillSets;
     } catch (error) {
       throw new Error(error);
     }
