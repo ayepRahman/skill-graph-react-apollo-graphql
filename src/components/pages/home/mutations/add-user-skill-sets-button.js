@@ -3,7 +3,7 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import autoBind from "react-autobind";
 
-import { Container, Columns, Column } from "bloomer";
+import { Container, Columns, Column, Section } from "bloomer";
 import {
   Modal,
   ModalBackground,
@@ -18,8 +18,6 @@ import {
 } from "bloomer";
 import { Field, Control, Label, Input } from "bloomer";
 import { Button } from "bloomer";
-
-import { ALL_USERS_QUERY } from "../queries/user-skills";
 
 export class AddUserSkillSetsButton extends Component {
   constructor(props) {
@@ -92,7 +90,7 @@ export class AddUserSkillSetsButton extends Component {
     // });
   };
 
-  onAddSkillSets = () => {
+  onAddSkillSetsRow = () => {
     console.log("onAddSkillSets");
     this.setState({
       skillSetsInputs: this.state.skillSetsInputs.concat({
@@ -102,7 +100,7 @@ export class AddUserSkillSetsButton extends Component {
     });
   };
 
-  onRemoveSkillSets = index => {
+  onRemoveSkillSetsRow = index => {
     console.log("onRemoveSkillSets");
 
     this.setState({
@@ -120,10 +118,10 @@ export class AddUserSkillSetsButton extends Component {
         {addUser =>
           skillSetsInputs.map((skillSetInput, index) => {
             return (
-              <Container key={index}>
+              <Container isDisplay="inline-flex">
                 <form onSubmit={event => this.handleSubmit(event, addUser)}>
-                  <Columns isMultiline>
-                    <Column isSize={{ default: 6 }}>
+                  <Columns isFullWidth>
+                    <Column isSize={{ default: "full" }}>
                       <Field>
                         <Label isPulled="left">Skill</Label>
                         <Control>
@@ -139,7 +137,7 @@ export class AddUserSkillSetsButton extends Component {
                       </Field>
                     </Column>
 
-                    <Column isSize={{ default: 4 }}>
+                    <Column isSize={{ default: 6 }}>
                       <Field>
                         <Label isPulled="left">Expertise</Label>
                         <Control isDisplay="block">
@@ -158,11 +156,14 @@ export class AddUserSkillSetsButton extends Component {
                     </Column>
 
                     <Column isPulled="right" isSize={{ default: 2 }}>
-                      <Icon
-                        isPulled="right"
-                        className="fas fa-minus-circle p-t-lg"
-                        onClick={() => this.onRemoveSkillSets(index)}
-                      />
+                      <div className="p-t-lg">
+                        <Icon
+                          style={{ cursor: "pointer" }}
+                          isPulled="right"
+                          className="fa fa-minus-circle"
+                          onClick={() => this.onRemoveSkillSetsRow(index)}
+                        />
+                      </div>
                     </Column>
                   </Columns>
                 </form>
@@ -189,12 +190,12 @@ export class AddUserSkillSetsButton extends Component {
               <ModalCardBody>
                 <div className="p-b-xl">
                   <Icon
+                    style={{ cursor: "pointer" }}
                     isPulled="right"
-                    className="fas fa-plus-circle"
-                    onClick={this.onAddSkillSets}
+                    className="fas fa-plus-circle fa-1x"
+                    onClick={this.onAddSkillSetsRow}
                   />
                 </div>
-
                 {this.renderForm()}
               </ModalCardBody>
               <ModalCardFooter>
@@ -226,9 +227,9 @@ export class AddUserSkillSetsButton extends Component {
               onClick={() => this.toggleModal()}
               isColor="primary"
             >
-              Add Skill
+              Add Skill Sets
             </Button>
-            {this.renderModal()}
+            <div>{this.renderModal()}</div>
           </Column>
         </Columns>
       </Container>
@@ -237,8 +238,8 @@ export class AddUserSkillSetsButton extends Component {
 }
 
 export const ADD_USER_SKILL = gql`
-  mutation addUserSkill($skillName: String!, $skillLevel: Int!) {
-    addUserSkill(skillName: $skillName, skillLevel: $skillLevel) {
+  mutation addUserSkillSets($skillName: String!, $skillLevel: Int!) {
+    addUserSkillSets(skillName: $skillName, skillLevel: $skillLevel) {
       skillName
       skillLevel
     }
