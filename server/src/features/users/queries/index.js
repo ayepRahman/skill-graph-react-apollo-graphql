@@ -13,9 +13,9 @@ export default {
 
     return user;
   },
-  me: async (root, args, { models, user }) => {
-    if (user) {
-      const users = await models.User.findById(user.id);
+  me: async (root, args, { models, userFromHeader }) => {
+    if (userFromHeader) {
+      const users = await models.User.findById(userFromHeader.id);
 
       console.log("Users", users);
 
@@ -23,5 +23,16 @@ export default {
     }
 
     return null;
+  },
+  getUserSkillSets: async (root, args, { models, userFromHeader }) => {
+    if (userFromHeader) {
+      const parseUser = JSON.parse(userFromHeader);
+      const user = await models.User.findById(parseUser._id);
+      console.log("getUserSkillSets", user.skillSets);
+
+      return [];
+    } else {
+      throw new Error("Not Authorized!");
+    }
   }
 };

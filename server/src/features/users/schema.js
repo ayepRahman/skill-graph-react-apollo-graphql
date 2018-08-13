@@ -57,6 +57,7 @@ const typeDefs = `
       users: [User!]!
       userById(id: String!): User!
       me: User!
+      getUserSkillSets: [Skill]
     }
 
     type Mutation {

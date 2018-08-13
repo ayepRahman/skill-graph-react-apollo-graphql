@@ -26,16 +26,16 @@ const ws = createServer(server);
 // get user from headers
 const getUserFromHeaders = async (req, res, next) => {
   const token = req.headers["x-token"];
-  console.log(`TOKEN: ${token}`);
+  console.log(`X-TOKEN: ${token}`);
 
   if (token) {
     try {
       // verify token with secret
       const { user } = jwt.verify(token, SECRET);
       req.user = JSON.stringify(user);
-      console.log(`VERIFIED USER: ${req.user}`);
+      console.log(`HAS VERIFIED USER: ${req.user}`);
     } catch (error) {
-      console.log("getUserFromHeaders", error);
+      console.log("TOKEN IS NOT VERIFIED:", error);
       const refreshToken = req.headers["x-refresh-token"];
       const newTokens = await refreshTokens(
         token,

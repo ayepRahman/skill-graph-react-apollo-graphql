@@ -26,8 +26,6 @@ export class AddUserSkillSetsButton extends Component {
     this.state = {
       isOpen: false,
       name: "",
-      skillName: "",
-      skillLevel: 1,
       skillSetsInputs: [{ skillName: "", skillLevel: 1 }]
     };
 
@@ -35,6 +33,7 @@ export class AddUserSkillSetsButton extends Component {
   }
 
   componentDidMount = () => {
+    console.log("CDM", this.props);
     // query the initial value of skillset if any and set to state
   };
 
@@ -60,12 +59,8 @@ export class AddUserSkillSetsButton extends Component {
 
   handleSubmit = async (event, mutate) => {
     const { skillSetsInputs } = this.state;
-    const { skillName, skillLevel } = skillSetsInputs;
     event.preventDefault();
 
-    console.log("skillSetsInputs", skillSetsInputs);
-
-    // TODO: add skill's to radarChart
     await mutate({
       variables: { skillSets: skillSetsInputs }
       // update: (cache, { data: { addUser } }) => {
@@ -86,13 +81,12 @@ export class AddUserSkillSetsButton extends Component {
       // }
     });
 
-    // this.setState({
-    //   isOpen: !this.state.isOpen
-    // });
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
   };
 
   onAddSkillSetsRow = () => {
-    console.log("onAddSkillSets");
     this.setState({
       skillSetsInputs: this.state.skillSetsInputs.concat({
         skillName: "",
@@ -102,8 +96,6 @@ export class AddUserSkillSetsButton extends Component {
   };
 
   onRemoveSkillSetsRow = index => {
-    console.log("onRemoveSkillSets");
-
     this.setState({
       skillSetsInputs: this.state.skillSetsInputs.filter(
         (skillSetInput, sIndex) => index !== sIndex
@@ -116,10 +108,8 @@ export class AddUserSkillSetsButton extends Component {
 
     return (
       <Mutation mutation={ADD_USER_SKILLS_SETS}>
-        {(mutate, { error }) => {
-          console.log("ERROR FROM FORM", error);
-
-          return skillSetsInputs.map((skillSetInput, index) => {
+        {(mutate, { error }) =>
+          skillSetsInputs.map((skillSetInput, index) => {
             return (
               <Columns
                 key={index}
@@ -172,8 +162,8 @@ export class AddUserSkillSetsButton extends Component {
                 </Column>
               </Columns>
             );
-          });
-        }}
+          })
+        }
       </Mutation>
     );
   }
