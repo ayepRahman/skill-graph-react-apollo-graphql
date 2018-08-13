@@ -3,7 +3,7 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import autoBind from "react-autobind";
 
-import { Container, Columns, Column, Section } from "bloomer";
+import { Container, Columns, Column, Notification } from "bloomer";
 import {
   Modal,
   ModalBackground,
@@ -187,7 +187,7 @@ export class AddUserSkillSetsButton extends Component {
           {(mutate, { loading, error }) => {
             console.log("loading", loading);
             if (error) {
-              console.log(error.message);
+              console.log(error.graphQLErrors[0].message);
             }
 
             return (
@@ -197,6 +197,16 @@ export class AddUserSkillSetsButton extends Component {
                   <Delete onClick={this.toggleModal} />
                 </ModalCardHeader>
                 <ModalCardBody>
+                  {error && (
+                    <Columns isFullWidth>
+                      <Column isDisplay={{ default: "full" }}>
+                        <Notification isColor="danger">
+                          {error.graphQLErrors[0].message}
+                        </Notification>
+                      </Column>
+                    </Columns>
+                  )}
+
                   <Columns isFullWidth>
                     <Column isDisplay={{ default: "full" }}>
                       <Icon
