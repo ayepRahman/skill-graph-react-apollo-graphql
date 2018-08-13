@@ -3,6 +3,8 @@ import { withApollo } from "react-apollo";
 import gql from "graphql-tag";
 import autoBind from "react-autobind";
 
+import RadarChart from "components/common/chart/radar";
+
 export class UserSkillGraph extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +42,11 @@ export class UserSkillGraph extends Component {
   };
 
   render() {
-    return <div />;
+    const { skillSets } = this.state;
+
+    if (!skillSets) return null;
+
+    return <RadarChart />;
   }
 }
 

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Container, Columns, Column, Section, Title, Subtitle } from "bloomer";
 
 import UserDetails from "./queries/user-details";
-import UsersSkillGraph from "./queries/user-skills";
+import UsersSkillGraph from "./queries/user-skill-graph";
 import AddUserSkillSetsButton from "./mutations/add-user-skill-sets-button";
 
 export class Home extends Component {
@@ -18,9 +18,16 @@ export class Home extends Component {
               <Subtitle>Please add your skill to showcase</Subtitle>
             </Column>
           </Columns>
+
           <Columns isCentered>
             <Column isSize="full" hasTextAlign="centered">
               <AddUserSkillSetsButton />
+            </Column>
+          </Columns>
+
+          <Columns isCentered>
+            <Column isSize="full" hasTextAlign="centered">
+              <UsersSkillGraph />
             </Column>
           </Columns>
         </Container>
