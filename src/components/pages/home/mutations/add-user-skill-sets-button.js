@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Mutation } from "react-apollo";
+import { Mutation, withApollo } from "react-apollo";
 import gql from "graphql-tag";
 import autoBind from "react-autobind";
 
@@ -32,9 +32,30 @@ export class AddUserSkillSetsButton extends Component {
     autoBind(this);
   }
 
-  componentDidMount = () => {
-    console.log("CDM", this.props);
-    // query the initial value of skillset if any and set to state
+  componentDidMount = async () => {
+    const { client } = this.props;
+    try {
+      const response = await client.query({
+        query: gql`
+          query getUserSkillSets {
+            getUserSkillSets {
+              skillName
+              skillLevel
+            }
+          }
+        `
+      });
+
+      if (response.error) {
+        console.log(response.error);
+      } else {
+        this.setState({
+          skillSetsInputs: response.data.getUserSkillSets
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   toggleModal() {
@@ -44,7 +65,6 @@ export class AddUserSkillSetsButton extends Component {
   }
 
   handleChange = index => event => {
-    console.log("handleChange", event.target.value, index);
     const newSkillSetsInputs = this.state.skillSetsInputs.map(
       (skillSetInput, sIndex) => {
         if (index !== sIndex) return skillSetInput;
@@ -237,6 +257,9 @@ export class AddUserSkillSetsButton extends Component {
   }
 
   render() {
+    console.log(this.state.skillSetsInputs.length);
+    const { skillSetsInputs } = this.state;
+
     return (
       <Container>
         <Columns isCentered>
@@ -246,7 +269,9 @@ export class AddUserSkillSetsButton extends Component {
               onClick={() => this.toggleModal()}
               isColor="primary"
             >
-              Add Skill Sets
+              {skillSetsInputs.length > 1 && skillSetsInputs[0].skillName !== ""
+                ? "Update Skill Sets"
+                : "Add Skill Sets"}
             </Button>
             <div>{this.renderModal()}</div>
           </Column>
@@ -265,4 +290,4 @@ export const ADD_USER_SKILLS_SETS = gql`
   }
 `;
 
-export default AddUserSkillSetsButton;
+export default withApollo(AddUserSkillSetsButton);

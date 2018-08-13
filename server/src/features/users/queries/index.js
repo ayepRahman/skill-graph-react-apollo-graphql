@@ -30,7 +30,7 @@ export default {
       const user = await models.User.findById(parseUser._id);
       console.log("getUserSkillSets", user.skillSets);
 
-      return [];
+      return user.skillSets;
     } else {
       throw new Error("Not Authorized!");
     }
