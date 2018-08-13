@@ -60,30 +60,31 @@ export class AddUserSkillSetsButton extends Component {
 
   handleSubmit = async (event, mutate) => {
     const { skillSetsInputs } = this.state;
+    const { skillName, skillLevel } = skillSetsInputs;
     event.preventDefault();
 
-    console.log(skillSetsInputs);
+    console.log("skillSetsInputs", skillSetsInputs);
 
-    // await mutate({
-    //   variables: { skillName, skillLevel }
-    //   // TODO: add skill's to radarChart
-    //   // update: (cache, { data: { addUser } }) => {
-    //   //   const { users } = cache.readQuery({
-    //   //     query: ALL_USERS_QUERY
-    //   //   });
+    // TODO: add skill's to radarChart
+    await mutate({
+      variables: { skillSets: skillSetsInputs }
+      // update: (cache, { data: { addUser } }) => {
+      //   const { users } = cache.readQuery({
+      //     query: ALL_USERS_QUERY
+      //   });
 
-    //   //   cache.writeQuery({
-    //   //     query: ALL_USERS_QUERY,
-    //   //     data: { users: users.concat([addUser]) }
-    //   //   });
-    //   // }
-    //   // optimisticResponse: {
-    //   //   __typename: "Mutation",
-    //   //   addUser: {
-    //   //     __typename: ""
-    //   //   }
-    //   // }
-    // });
+      //   cache.writeQuery({
+      //     query: ALL_USERS_QUERY,
+      //     data: { users: users.concat([addUser]) }
+      //   });
+      // }
+      // optimisticResponse: {
+      //   __typename: "Mutation",
+      //   addUser: {
+      //     __typename: ""
+      //   }
+      // }
+    });
 
     // this.setState({
     //   isOpen: !this.state.isOpen
@@ -114,63 +115,65 @@ export class AddUserSkillSetsButton extends Component {
     const { skillSetsInputs } = this.state;
 
     return (
-      <Mutation mutation={ADD_USER_SKILL}>
-        {addUser =>
-          skillSetsInputs.map((skillSetInput, index) => {
+      <Mutation mutation={ADD_USER_SKILLS_SETS}>
+        {(mutate, { error }) => {
+          console.log("ERROR FROM FORM", error);
+
+          return skillSetsInputs.map((skillSetInput, index) => {
             return (
-              <Container isDisplay="inline-flex">
-                <form onSubmit={event => this.handleSubmit(event, addUser)}>
-                  <Columns isFullWidth>
-                    <Column isSize={{ default: "full" }}>
-                      <Field>
-                        <Label isPulled="left">Skill</Label>
-                        <Control>
-                          <Input
-                            name="skillName"
-                            type="text"
-                            placeholder="Skill Name"
-                            value={skillSetInput.skillName}
-                            onChange={this.handleChange(index)}
-                            required
-                          />
-                        </Control>
-                      </Field>
-                    </Column>
+              <Columns
+                key={index}
+                onSubmit={event => this.handleSubmit(event, mutate)}
+                isFullWidth
+              >
+                <Column isSize={{ default: 5 }}>
+                  <Field>
+                    <Label isPulled="left">Skill</Label>
+                    <Control>
+                      <Input
+                        name="skillName"
+                        type="text"
+                        placeholder="Skill Name"
+                        value={skillSetInput.skillName}
+                        onChange={this.handleChange(index)}
+                        required
+                      />
+                    </Control>
+                  </Field>
+                </Column>
 
-                    <Column isSize={{ default: 6 }}>
-                      <Field>
-                        <Label isPulled="left">Expertise</Label>
-                        <Control isDisplay="block">
-                          <Select
-                            isFullWidth
-                            value={skillSetInput.skillLevel}
-                            onChange={this.handleChange(index)}
-                            name="skillLevel"
-                          >
-                            <option value={1}>Beginner</option>
-                            <option value={2}>Intermediate</option>
-                            <option value={3}>Expert</option>
-                          </Select>
-                        </Control>
-                      </Field>
-                    </Column>
+                <Column isSize={{ default: 5 }}>
+                  <Field>
+                    <Label isPulled="left">Expertise</Label>
+                    <Control isDisplay="block">
+                      <Select
+                        isFullWidth
+                        value={skillSetInput.skillLevel}
+                        onChange={this.handleChange(index)}
+                        name="skillLevel"
+                      >
+                        <option value={1}>Beginner</option>
+                        <option value={2}>Intermediate</option>
+                        <option value={3}>Expert</option>
+                      </Select>
+                    </Control>
+                  </Field>
+                </Column>
 
-                    <Column isPulled="right" isSize={{ default: 2 }}>
-                      <div className="p-t-lg">
-                        <Icon
-                          style={{ cursor: "pointer" }}
-                          isPulled="right"
-                          className="fa fa-minus-circle"
-                          onClick={() => this.onRemoveSkillSetsRow(index)}
-                        />
-                      </div>
-                    </Column>
-                  </Columns>
-                </form>
-              </Container>
+                <Column isPulled="right" isSize={{ default: 2 }}>
+                  <div className="p-t-lg">
+                    <Icon
+                      style={{ cursor: "pointer" }}
+                      isPulled="right"
+                      className="fa fa-minus-circle"
+                      onClick={() => this.onRemoveSkillSetsRow(index)}
+                    />
+                  </div>
+                </Column>
+              </Columns>
             );
-          })
-        }
+          });
+        }}
       </Mutation>
     );
   }
@@ -180,38 +183,54 @@ export class AddUserSkillSetsButton extends Component {
       <Modal isActive={this.state.isOpen}>
         <ModalBackground />
 
-        <Mutation mutation={ADD_USER_SKILL}>
-          {mutate => (
-            <ModalCard>
-              <ModalCardHeader>
-                <ModalCardTitle>Add User Skill</ModalCardTitle>
-                <Delete onClick={this.toggleModal} />
-              </ModalCardHeader>
-              <ModalCardBody>
-                <div className="p-b-xl">
-                  <Icon
-                    style={{ cursor: "pointer" }}
-                    isPulled="right"
-                    className="fas fa-plus-circle fa-1x"
-                    onClick={this.onAddSkillSetsRow}
-                  />
-                </div>
-                {this.renderForm()}
-              </ModalCardBody>
-              <ModalCardFooter>
-                <Button
-                  onClick={event => this.handleSubmit(event, mutate)}
-                  isColor="primary"
-                  isOutlined
-                >
-                  Save
-                </Button>
-                <Button onClick={this.toggleModal} isColor="danger" isOutlined>
-                  Cancel
-                </Button>
-              </ModalCardFooter>
-            </ModalCard>
-          )}
+        <Mutation mutation={ADD_USER_SKILLS_SETS}>
+          {(mutate, { loading, error }) => {
+            console.log("loading", loading);
+            if (error) {
+              console.log(error.message);
+            }
+
+            return (
+              <ModalCard>
+                <ModalCardHeader>
+                  <ModalCardTitle>Add User Skill</ModalCardTitle>
+                  <Delete onClick={this.toggleModal} />
+                </ModalCardHeader>
+                <ModalCardBody>
+                  <Columns isFullWidth>
+                    <Column isDisplay={{ default: "full" }}>
+                      <Icon
+                        style={{ cursor: "pointer" }}
+                        isPulled="right"
+                        className="fas fa-plus-circle fa-1x"
+                        onClick={this.onAddSkillSetsRow}
+                      />
+                    </Column>
+                  </Columns>
+
+                  {this.renderForm()}
+                </ModalCardBody>
+                <ModalCardFooter>
+                  <Button
+                    isLoading={loading}
+                    disabled={loading}
+                    onClick={event => this.handleSubmit(event, mutate)}
+                    isColor="primary"
+                    isOutlined
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    onClick={this.toggleModal}
+                    isColor="danger"
+                    isOutlined
+                  >
+                    Cancel
+                  </Button>
+                </ModalCardFooter>
+              </ModalCard>
+            );
+          }}
         </Mutation>
       </Modal>
     );
@@ -237,9 +256,9 @@ export class AddUserSkillSetsButton extends Component {
   }
 }
 
-export const ADD_USER_SKILL = gql`
-  mutation addUserSkillSets($skillName: String!, $skillLevel: Int!) {
-    addUserSkillSets(skillName: $skillName, skillLevel: $skillLevel) {
+export const ADD_USER_SKILLS_SETS = gql`
+  mutation addUserSkillSets($skillSets: [SkillOption]) {
+    addUserSkillSets(skillSets: $skillSets) {
       skillName
       skillLevel
     }

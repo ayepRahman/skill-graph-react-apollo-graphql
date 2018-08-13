@@ -87,27 +87,24 @@ export default {
     }
   },
 
-  addUserSkillSets: async (
-    root,
-    { id, skillSets },
-    { models, userFromHeader }
-  ) => {
+  addUserSkillSets: async (root, { skillSets }, { models, userFromHeader }) => {
     let User;
 
-    console.log("ROOT", root);
-
     try {
-      if (!userFromHeader && id) {
-        await models.User.update({ _id: id }, { skillSets: skillSets });
-        User = await models.User.findById({ _id: id });
-      } else if (userFromHeader) {
-        const parseUser = JSON.parse(userFromHeader);
-        await models.User.update(
-          { id: parseUser._id },
-          { skillSets: skillSets }
-        );
-        User = await models.User.findById({ _id: parseUser._id });
-      }
+      // if (!userFromHeader && id) {
+      //   await models.User.update({ _id: id }, { skillSets: skillSets });
+      //   User = await models.User.findById({ _id: id });
+      // } else if (userFromHeader) {
+      // }
+      skillSets.map(data => {
+        if (!data.skillName) {
+          throw new Error("No empty skill name");
+        }
+      });
+
+      const parseUser = JSON.parse(userFromHeader);
+      await models.User.update({ id: parseUser._id }, { skillSets: skillSets });
+      User = await models.User.findById({ _id: parseUser._id });
 
       const userSkillSets = User.skillSets;
 
