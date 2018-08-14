@@ -28,7 +28,6 @@ export default {
     if (userFromHeader) {
       const parseUser = JSON.parse(userFromHeader);
       const user = await models.User.findById(parseUser._id);
-      console.log("getUserSkillSets", user.skillSets);
 
       return user.skillSets;
     } else {

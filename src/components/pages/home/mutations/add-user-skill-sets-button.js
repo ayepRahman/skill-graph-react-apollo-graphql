@@ -49,6 +49,11 @@ export class AddUserSkillSetsButton extends Component {
       if (response.error) {
         console.log(response.error);
       } else {
+        console.log("OI", response.data.getUserSkillSets);
+        response.data.getUserSkillSets.forEach(data => {
+          delete data.__typename;
+        });
+
         this.setState({
           skillSetsInputs: response.data.getUserSkillSets
         });
@@ -80,6 +85,10 @@ export class AddUserSkillSetsButton extends Component {
   handleSubmit = async (event, mutate) => {
     const { skillSetsInputs } = this.state;
     event.preventDefault();
+    // skillSetsInputs.forEach(data => {
+    //   // console.log(data.__typename);
+    //   delete data.__typename;
+    // });
 
     await mutate({
       variables: { skillSets: skillSetsInputs }
@@ -195,11 +204,6 @@ export class AddUserSkillSetsButton extends Component {
 
         <Mutation mutation={ADD_USER_SKILLS_SETS}>
           {(mutate, { loading, error }) => {
-            console.log("loading", loading);
-            if (error) {
-              console.log(error.graphQLErrors[0].message);
-            }
-
             return (
               <ModalCard>
                 <ModalCardHeader>
@@ -257,7 +261,6 @@ export class AddUserSkillSetsButton extends Component {
   }
 
   render() {
-    console.log(this.state.skillSetsInputs.length);
     const { skillSetsInputs } = this.state;
 
     return (

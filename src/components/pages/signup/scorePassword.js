@@ -1,5 +1,4 @@
 export const scorePassword = password => {
-  // console.log("Is password", password);
   let score = 0;
   if (!password) return score;
 

@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import autoBind from "react-autobind";
 
 import RadarChart from "components/common/chart/radar";
+import { forEach } from "async";
 
 export class UserSkillGraph extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ export class UserSkillGraph extends Component {
     autoBind(this);
 
     this.state = {
-      skillSets: []
+      skillName: [],
+      skillLevel: []
     };
   }
 
@@ -32,21 +34,34 @@ export class UserSkillGraph extends Component {
       if (response.error) {
         console.log(response.error);
       } else {
-        this.setState({
-          skillSets: response.data.getUserSkillSets
-        });
+        this.convertSkillSetsToData(response.data.getUserSkillSets);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  convertSkillSetsToData(skillSets) {
+    let skillNameArray = ["No Skill"];
+    let skillLevelArray = [0];
+
+    skillSets.forEach(data => {
+      skillNameArray.push(data.skillName);
+      skillLevelArray.push(data.skillLevel);
+    });
+
+    this.setState({
+      skillName: skillNameArray,
+      skillLevel: skillLevelArray
+    });
+  }
+
   render() {
-    const { skillSets } = this.state;
+    const { skillName, skillLevel } = this.state;
 
-    if (!skillSets) return null;
+    if (!skillName && !skillLevel) return null;
 
-    return <RadarChart />;
+    return <RadarChart skillName={skillName} skillLevel={skillLevel} />;
   }
 }
 

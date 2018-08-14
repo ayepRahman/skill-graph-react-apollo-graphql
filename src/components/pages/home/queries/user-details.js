@@ -16,7 +16,6 @@ export class UserDetails extends Component {
 
     try {
       const userToken = decode(token) || decode(refreshToken);
-      console.log("userToken details", userToken);
 
       if (userToken) {
         this.setState({

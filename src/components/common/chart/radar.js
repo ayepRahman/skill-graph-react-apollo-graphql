@@ -13,17 +13,20 @@ export class RadarChart extends Component {
   render() {
     const { skillName, skillLevel } = this.props;
 
+    console.log(skillName);
+    console.log(skillLevel);
+
     const settings = {
       labels: skillName,
       datasets: [
         {
-          label: "User Skills", //name of the user /skill maybe,
-          backgroundColor: "rgba(179,181,198,0.2)",
-          borderColor: "rgba(179,181,198,1)",
-          pointBackgroundColor: "rgba(179,181,198,1)",
-          pointBorderColor: "#fff",
-          pointHoverBackgroundColor: "#fff",
-          pointHoverBorderColor: "rgba(179,181,198,1)",
+          label: "User Skill Level", //name of the user /skill maybe,
+          backgroundColor: "#DCFFB780",
+          borderColor: "#B6FF6A80",
+          pointBackgroundColor: "#B0CC92",
+          pointBorderColor: "#447F07",
+          pointHoverBackgroundColor: "#DCFFB7",
+          pointHoverBorderColor: "#B6FF6A",
           data: skillLevel // array of skill level
         }
       ]
